@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>AO.BackgroundJobs</PackageId>
+    <Authors>Adam O'Neil</Authors>
+    <Product>AO.BackgroundJobs</Product>
+    <Description>Abstract base class for managing long-running background jobs, such as from Azure Functions</Description>
+    <Copyright>Copyright (c) 2021 Adam O'Neil</Copyright>
+  </PropertyGroup>
+
+</Project>
