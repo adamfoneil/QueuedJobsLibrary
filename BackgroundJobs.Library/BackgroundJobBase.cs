@@ -11,23 +11,23 @@ namespace BackgroundJobs
         Failed
     }
 
-    public abstract class BackgroundJobBase<TResult, TException>
+    public abstract class BackgroundJobBase<TRequest, TResult, TKey>
     {
-        public BackgroundJobBase(string description)
+        public BackgroundJobBase(TRequest request)
         {            
             Status = Status.Pending;
-            Description = description;
+            RequestData = Serialize(request);
         }
 
-        public string UserName { get; }
-        public DateTime? Started { get; private set; }
-        public DateTime? Completed { get; private set; }
-        public string Description { get; }     
-        public Status Status { get; private set; }
-        public bool IsCleared { get; private set; }
-        public TResult Result { get; private set; }
-        public TException Exception { get; private set; }
-        public int RetryCount { get; private set; }
+        public TKey Id { get; set; }
+        public string RequestData { get; set; }
+        public DateTime? Started { get; set; }
+        public DateTime? Completed { get; set; }        
+        public Status Status { get; set; }
+        public bool IsCleared { get; set; }
+        public string ResultData { get; set; }
+        public string ExceptionData { get; set; }
+        public int RetryCount { get; set; }
 
         public TimeSpan? Duration =>
             (!Started.HasValue) ? default :
@@ -44,18 +44,19 @@ namespace BackgroundJobs
                 await StoreAsync(() => 
                 { 
                     RetryCount++;
-                    Exception = default;
+                    ExceptionData = default;
                     Status = Status.Running;
                     Started = DateTime.UtcNow;
                 });
-                
-                var result = await OnExecuteAsync();
+
+                var request = Deserialize<TRequest>(RequestData);
+                var result = await OnExecuteAsync(request);
 
                 await StoreAsync(() =>
                 {
                     Completed = DateTime.UtcNow;
                     Status = Status.Succeeded;
-                    Result = result;
+                    ResultData = Serialize(result);
                 });                
             }
             catch (Exception exc)
@@ -64,7 +65,7 @@ namespace BackgroundJobs
                 {
                     Status = Status.Failed;
                     Completed = DateTime.UtcNow;
-                    Exception = ConvertException(exc);
+                    ExceptionData = Serialize(exc);
                 });                
             }
         }
@@ -72,16 +73,21 @@ namespace BackgroundJobs
         /// <summary>
         /// all your work goes here
         /// </summary>
-        protected abstract Task<TResult> OnExecuteAsync();
+        protected abstract Task<TResult> OnExecuteAsync(TRequest request);
 
         /// <summary>
         /// typically executes SQL updates to the job itself
         /// </summary>
-        public abstract Task StoreAsync(Action updateAction);
+        public abstract Task<TKey> StoreAsync(Action updateAction = null);      
 
         /// <summary>
-        /// how do we convert exceptions into an easily storable format?
+        /// how do we perform json serialization?
         /// </summary>
-        protected abstract TException ConvertException(Exception exception);
+        protected abstract string Serialize(object @object);
+
+        /// <summary>
+        /// how do we serialize to json?
+        /// </summary>
+        protected abstract T Deserialize<T>(string json);
     }
 }
