@@ -1,8 +1,8 @@
 ﻿using AO.Models.Interfaces;
 using Microsoft.Extensions.Logging;
+using QueuedJobs.Library.Interfaces;
 using System;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -16,10 +16,8 @@ namespace BackgroundJobs
         Failed
     }
 
-    public abstract class QueuedJobBase<TRequest, TResult, TKey> : IModel<TKey>
+    public abstract class QueuedJobBase<TRequest, TResult, TKey> : IModel<TKey>, ICallbackData<TKey, TResult>
     {
-        private static HttpClient _client = new HttpClient();
-
         public QueuedJobBase(TRequest request)
         {            
             Status = Status.Pending;
@@ -44,9 +42,14 @@ namespace BackgroundJobs
             (Started.HasValue && Completed.HasValue) ? Completed.Value.Subtract(Started.Value) :
             default;
 
-        public bool IsRunning => Status == Status.Running;        
+        public bool IsRunning => Status == Status.Running;
+        
+        public TResult Result { get; private set; }
 
-        public async Task ExecuteAsync(IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey, IUserBase> repository, string callbackUrl, ILogger logger = null)
+        public async Task ExecuteAsync(
+            IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey, IUserBase> repository, 
+            Func<ICallbackData<TKey, TResult>, Task> callback, 
+            ILogger logger = null)
         {
             var request = JsonSerializer.Deserialize<TRequest>(RequestData);
             TResult result = default;
@@ -61,7 +64,7 @@ namespace BackgroundJobs
                     Started = DateTime.UtcNow;
                 });
                 
-                result = await OnExecuteAsync(request);
+                Result = await OnExecuteAsync(request);
 
                 await UpdateAsync(repository, () =>
                 {
@@ -91,13 +94,12 @@ namespace BackgroundJobs
             finally
             {
                 try
-                {
-                    var response = await _client.PostAsync(callbackUrl, JsonContent.Create(this));
-                    response.EnsureSuccessStatusCode();
+                {                    
+                    await callback.Invoke(this);
                 }
                 catch (Exception exc)
                 {
-                    var message = $"Error executing job completion callback: {callbackUrl}: {exc.Message}";
+                    var message = $"Error executing job completion callback for job Id {Id}: {exc.Message}";
                     logger?.LogError(message);
                 }                
             }
