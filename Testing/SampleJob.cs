@@ -1,8 +1,14 @@
-﻿using Dapper.CX.SqlServer.Extensions.Int;
-using QueuedJobs.Library;
+﻿using Dapper.CX.Extensions;
+using Dapper.CX.SqlServer.Extensions.Int;
+using Microsoft.Extensions.Logging;
+using ModelSync.Models;
+using QueuedJobs.Abstract;
 using QueuedJobs.Library.Interfaces;
+using QueuedJobs.Models;
 using SqlServer.LocalDb;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,12 +29,17 @@ namespace Testing
     public class OcrResult
     {
         public IEnumerable<string> Words { get; set; }
-    }
+    }    
 
-    public class SampleJob : QueuedJobBase<OcrRequest, OcrResult, int>
+    public class SampleJobRunner : JobRunner<Job, int, OcrRequest, OcrResult>
     {
-        public SampleJob(string userName, OcrRequest request) : base(userName, request)
+        public SampleJobRunner(ILogger logger) : base(new JobRepository(), logger)
         {
+        }
+
+        protected override Task OnCompletedAsync(int id, Status status, OcrResult result)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override async Task<OcrResult> OnExecuteAsync(OcrRequest request)
@@ -47,23 +58,44 @@ namespace Testing
         }
     }
 
-    public class JobRepository : IRepository<SampleJob, int>
+    [Table("Job", Schema = "queue")]
+    public class Job : QueuedJob<int>
     {
-        private const string DbName = "QueuedJobs";
+    }
 
-        public async Task<SampleJob> GetAsync(int key)
+    public class JobRepository : IRepository<Job, int>
+    {
+        public const string DbName = "QueuedJobs";
+
+        public async Task<Job> GetAsync(int key)
         {
             using (var cn = LocalDb.GetConnection(DbName))
             {
-                return await cn.GetAsync<SampleJob>(key);
+                return await cn.GetAsync<Job>(key);
             }
         }
 
-        public async Task<int> SaveAsync(SampleJob model)
+        public async Task<Job> SaveAsync(Job model)
         {
             using (var cn = LocalDb.GetConnection(DbName))
             {
-                return await cn.SaveAsync(model);
+                await cn.SaveAsync(model);
+                return model;
+            }
+        }       
+
+        public async Task CreateTableIfNotExistsAsync()
+        {
+            using (var cn = LocalDb.GetConnection(DbName))
+            {
+                var exists = await cn.TableExistsAsync("queue", "Job");
+                if (!exists)
+                {                    
+                    await DataModel.CreateTablesAsync(new Type[] 
+                    {
+                        typeof(Job)
+                    }, cn);
+                }
             }
         }
     }

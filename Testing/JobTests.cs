@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QueuedJobs.Library.Interfaces;
-using System;
-using System.Threading.Tasks;
+using QueuedJobs.Extensions;
 
 namespace Testing
 {
@@ -13,22 +11,15 @@ namespace Testing
         public void QueueSampleJob()
         {
             var repo = new JobRepository();
+            repo.CreateTableIfNotExistsAsync().Wait();
+
             var logger = LoggerFactory.Create(config => config.AddDebug()).CreateLogger("testing");
 
-            var job = new SampleJob("adamo", new OcrRequest()
-            {
-                ContainerName = "whatever",
-                BlobName = "whoosiewhatsie.pdf"
-            });
+            var job = QueueClientExtensions.SaveJobAsync(repo, "adamo", new OcrRequest() { BlobName = "whatever.pdf", ContainerName = "hello" }).Result;
 
-            repo.SaveAsync(job).Wait();
-
-            job.ExecuteAsync(repo, OnCompletedAsync, logger).Wait();
+            var processor = new SampleJobRunner(logger);
+            processor.ExecuteAsync(job.Id).Wait();
         }
-
-        private Task OnCompletedAsync(IResultData<int, OcrResult> arg)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }
