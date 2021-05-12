@@ -65,12 +65,12 @@ namespace QueuedJobs.Library
                 });
                 
                 Result = await OnExecuteAsync(Request);
+                ResultData = JsonSerializer.Serialize(Result);
 
                 await UpdateAsync(repository, () =>
                 {
                     Completed = DateTime.UtcNow;
-                    Status = Status.Succeeded;
-                    ResultData = JsonSerializer.Serialize(Result);
+                    Status = Status.Succeeded;                    
                 });
             }
             catch (Exception exc)
