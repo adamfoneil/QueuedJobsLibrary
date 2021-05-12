@@ -18,9 +18,13 @@ namespace QueuedJobs.Library
 
     public abstract class QueuedJobBase<TRequest, TResult, TKey> : IModel<TKey>, IResultData<TKey, TResult>
     {
-        public QueuedJobBase(TRequest request)
-        {            
+        public QueuedJobBase(string userName, TRequest request)
+        {
+            // always need to know user who requested this, as this ties to their notifications
+            UserName = userName;
+            // new jobs are always pending because they aren't running until queue gets to them
             Status = Status.Pending;
+            // capture the request data as json so it can be processed later
             RequestData = JsonSerializer.Serialize(request);
         }
 
