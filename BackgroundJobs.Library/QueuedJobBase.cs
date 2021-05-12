@@ -13,7 +13,7 @@ namespace QueuedJobs.Library
         Running, // job is currently running
         Succeeded, // no errors in QueuedJobBase.OnExecuteAsync
         Failed, // error in QueuedJobBase.OnExecuteAsync
-        Aborted // job faied to queue (bad Azure connection string?)
+        Aborted // job failed to queue (bad Azure connection string?)
     }
 
     public abstract class QueuedJobBase<TRequest, TResult, TKey> : IModel<TKey>, IResultData<TKey, TResult>
@@ -51,10 +51,10 @@ namespace QueuedJobs.Library
         public TRequest Request { get; private set; }
         public TResult Result { get; private set; }
 
-        public async Task ExecuteAsync(
-            IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey> repository, 
+        public async Task ExecuteAsync<TModel>(
+            IRepository<TModel, TKey> repository, 
             Func<IResultData<TKey, TResult>, Task> callback, 
-            ILogger logger = null)
+            ILogger logger = null) where TModel : IModel<TKey>
         {
             Request = JsonSerializer.Deserialize<TRequest>(RequestData);            
 
@@ -117,7 +117,7 @@ namespace QueuedJobs.Library
         /// <summary>
         /// typically executes SQL updates to the job itself
         /// </summary>
-        private async Task UpdateAsync(IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey> repository, Action updateAction = null)
+        private async Task UpdateAsync<TModel>(IRepository<TModel, TKey> repository, Action updateAction = null) where TModel : IModel<TKey>
         {
             updateAction?.Invoke();
             await repository.SaveAsync(this);            
