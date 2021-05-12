@@ -8,7 +8,7 @@ namespace Testing
     public class JobTests
     {
         [TestMethod]
-        public void QueueSampleJob()
+        public void VerySimpleOfflineJob()
         {
             var repo = new JobRepository();
             repo.CreateTableIfNotExistsAsync().Wait();

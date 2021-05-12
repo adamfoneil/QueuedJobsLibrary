@@ -37,9 +37,9 @@ namespace Testing
         {
         }
 
-        protected override Task OnCompletedAsync(int id, Status status, OcrResult result)
-        {
-            throw new System.NotImplementedException();
+        protected override async Task OnCompletedAsync(int id, Status status, OcrResult result)
+        {            
+            await Task.CompletedTask;
         }
 
         protected override async Task<OcrResult> OnExecuteAsync(OcrRequest request)
