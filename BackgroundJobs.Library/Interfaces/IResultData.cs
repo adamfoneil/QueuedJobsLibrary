@@ -1,6 +1,6 @@
 ﻿namespace QueuedJobs.Library.Interfaces
 {
-    public interface ICallbackData<TKey, TResult>
+    public interface IResultData<TKey, TResult>
     {
         TKey Id { get; }        
         TResult Result { get; }        

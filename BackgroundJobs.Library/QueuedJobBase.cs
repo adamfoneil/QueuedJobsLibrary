@@ -2,21 +2,21 @@
 using Microsoft.Extensions.Logging;
 using QueuedJobs.Library.Interfaces;
 using System;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace BackgroundJobs
+namespace QueuedJobs.Library
 {
     public enum Status
     {
-        Pending,
-        Running,
-        Succeeded,
-        Failed
+        Pending, // job queued, but not sstarted yet
+        Running, // job is currently running
+        Succeeded, // no errors in QueuedJobBase.OnExecuteAsync
+        Failed, // error in QueuedJobBase.OnExecuteAsync
+        Aborted // job faied to queue (bad Azure connection string?)
     }
 
-    public abstract class QueuedJobBase<TRequest, TResult, TKey> : IModel<TKey>, ICallbackData<TKey, TResult>
+    public abstract class QueuedJobBase<TRequest, TResult, TKey> : IModel<TKey>, IResultData<TKey, TResult>
     {
         public QueuedJobBase(TRequest request)
         {            
@@ -44,15 +44,15 @@ namespace BackgroundJobs
 
         public bool IsRunning => Status == Status.Running;
         
+        public TRequest Request { get; private set; }
         public TResult Result { get; private set; }
 
         public async Task ExecuteAsync(
-            IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey, IUserBase> repository, 
-            Func<ICallbackData<TKey, TResult>, Task> callback, 
+            IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey> repository, 
+            Func<IResultData<TKey, TResult>, Task> callback, 
             ILogger logger = null)
         {
-            var request = JsonSerializer.Deserialize<TRequest>(RequestData);
-            TResult result = default;
+            Request = JsonSerializer.Deserialize<TRequest>(RequestData);            
 
             try
             {                
@@ -64,13 +64,13 @@ namespace BackgroundJobs
                     Started = DateTime.UtcNow;
                 });
                 
-                Result = await OnExecuteAsync(request);
+                Result = await OnExecuteAsync(Request);
 
                 await UpdateAsync(repository, () =>
                 {
                     Completed = DateTime.UtcNow;
                     Status = Status.Succeeded;
-                    ResultData = JsonSerializer.Serialize(result);
+                    ResultData = JsonSerializer.Serialize(Result);
                 });
             }
             catch (Exception exc)
@@ -84,8 +84,8 @@ namespace BackgroundJobs
 
                 var exceptionInfo = JsonSerializer.Serialize(new
                 {
-                    request,
-                    result,
+                    request = Request,
+                    result = Result,
                     exception = exc
                 });
 
@@ -113,12 +113,10 @@ namespace BackgroundJobs
         /// <summary>
         /// typically executes SQL updates to the job itself
         /// </summary>
-        private async Task UpdateAsync(IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey, IUserBase> repository, Action updateAction = null)
+        private async Task UpdateAsync(IRepository<QueuedJobBase<TRequest, TResult, TKey>, TKey> repository, Action updateAction = null)
         {
             updateAction?.Invoke();
-            await repository.SaveAsync(GetUser(), this);            
+            await repository.SaveAsync(this);            
         }      
-
-        protected abstract IUserBase GetUser();
     }
 }
