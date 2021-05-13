@@ -5,6 +5,7 @@
     /// </summary>
     public class ZipRequest
     {
-        public string FolderName { get; set; }
+        public string ContainerName { get; set; }
+        public string BlobPrefix { get; set; }
     }
 }
