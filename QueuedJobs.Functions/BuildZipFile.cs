@@ -70,35 +70,34 @@ namespace QueuedJobs.Functions
                                 var entry = outputZip.CreateEntry(blob.Name);
                                 using (var entryStream = entry.Open())
                                 {
-                                    await blobClient.UploadAsync(entryStream);
+                                    using (var inputStream = await blobClient.OpenReadAsync())
+                                    {
+                                        await inputStream.CopyToAsync(entryStream);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    var outputBlobClient = new BlobClient(_storageConnection, request.ContainerName, StringId.New(8, StringIdRanges.Lower | StringIdRanges.Numeric) + ".zip");
-                    await outputBlobClient.UploadAsync(outputStream, new BlobUploadOptions()
-                    {
-                        HttpHeaders = new BlobHttpHeaders()
+                        var outputBlobClient = new BlobClient(_storageConnection, request.ContainerName, StringId.New(8, StringIdRanges.Lower | StringIdRanges.Numeric) + ".zip");
+                        outputStream.Position = 0;
+                        await outputBlobClient.UploadAsync(outputStream, new BlobUploadOptions()
                         {
-                            ContentType = "application/zip"
-                        }
-                    });
+                            HttpHeaders = new BlobHttpHeaders()
+                            {
+                                ContentType = "application/zip"
+                            }
+                        });
 
-                    var expirationDate = DateTime.UtcNow.AddDays(3);
+                        var expirationDate = DateTime.UtcNow.AddDays(3);
 
-                    var sasUri = outputBlobClient.GenerateSasUri(new BlobSasBuilder()
-                    {
-                        BlobContainerName = request.ContainerName,
-                        BlobName = outputBlobClient.Name,                        
-                        ExpiresOn = expirationDate
-                    });
+                        var sasUri = outputBlobClient.GenerateSasUri(BlobSasPermissions.Read, expirationDate);
 
-                    return new ZipResult()
-                    {
-                        Url = sasUri.ToString(),
-                        ExpiresAfter = expirationDate
-                    };
+                        return new ZipResult()
+                        {
+                            Url = sasUri.ToString(),
+                            ExpiresAfter = expirationDate
+                        };
+                    }                   
                 }
             }
 

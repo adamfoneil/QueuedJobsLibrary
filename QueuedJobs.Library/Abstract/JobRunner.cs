@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using QueuedJobs.Extensions;
 using QueuedJobs.Library.Interfaces;
 using QueuedJobs.Models;
 using System;
@@ -61,7 +62,12 @@ namespace QueuedJobs.Abstract
                 {
                     Logger.LogError(exc, $"Job Id {job.Id} failed: {exc.Message}");
                     job.Status = Status.Failed;
-                    job.ExceptionData = JsonSerializer.Serialize(exc);
+                    job.ExceptionData = JsonSerializer.Serialize(new
+                    {
+                        message = exc.FullMessage(),
+                        data = exc.Data,
+                        stackTrace = exc.StackTrace
+                    });
                 }
                 finally
                 {
