@@ -7,11 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Testing", "Testing\Testing.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueuedJobs.Library", "QueuedJobs.Library\QueuedJobs.Library.csproj", "{14FE12DE-914E-4C39-9D97-2E2ED597B3AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Demo", "Notification.Demo\Notification.Demo.csproj", "{55584620-5D06-46E1-A28C-49EA89878AB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notification.Demo", "Notification.Demo\Notification.Demo.csproj", "{55584620-5D06-46E1-A28C-49EA89878AB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueuedJobs.Functions", "QueuedJobs.Functions\QueuedJobs.Functions.csproj", "{D1EDFECE-2233-4763-9A1D-CF75633FC851}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QueuedJobs.Functions", "QueuedJobs.Functions\QueuedJobs.Functions.csproj", "{D1EDFECE-2233-4763-9A1D-CF75633FC851}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notification.Shared", "Notification.Shared\Notification.Shared.csproj", "{415491EB-9D6B-4C4F-9F4C-A67D37652548}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notification.Shared", "Notification.Shared\Notification.Shared.csproj", "{415491EB-9D6B-4C4F-9F4C-A67D37652548}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

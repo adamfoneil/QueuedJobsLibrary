@@ -1,7 +1,9 @@
-﻿using Dapper.CX.SqlServer.Extensions.Int;
+﻿using Dapper;
+using Dapper.CX.SqlServer.Extensions.Int;
 using Microsoft.Data.SqlClient;
 using Notification.Shared.Models;
 using QueuedJobs.Library.Interfaces;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Notification.Shared
@@ -29,6 +31,16 @@ namespace Notification.Shared
             {
                 await cn.SaveAsync(model);
                 return model;
+            }
+        }
+
+        public async Task<IEnumerable<JobTracker>> ActiveJobsByUser(string userName)
+        {
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                return await cn.QueryAsync<JobTracker>(
+                    "SELECT * FROM [queue].[JobTracker] WHERE [UserName]=@userName AND [IsCleared]=0 ORDER BY [Created] ASC",
+                    new { userName });
             }
         }
     }

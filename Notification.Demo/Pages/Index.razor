@@ -1,7 +1,19 @@
 ﻿@page "/"
+@inject JobTrackerRepository Jobs
 
-<h1>Hello, world!</h1>
+<h1>Notification Demo</h1>
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+@code { 
+    const string userName = "demo-user";
+
+    IEnumerable<JobTracker> MyJobs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        MyJobs = await Jobs.ActiveJobsByUser(userName);
+    }
+}

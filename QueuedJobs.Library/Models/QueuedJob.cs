@@ -37,5 +37,7 @@ namespace QueuedJobs.Models
         public string ResultData { get; set; }
         public string ExceptionData { get; set; }
         public int RetryCount { get; set; }
+
+        public bool IsRunning => Status == Status.Running;
     }
 }
