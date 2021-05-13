@@ -11,7 +11,7 @@ namespace QueuedJobs.Abstract
     public abstract class JobRunner<TJob, TKey, TRequest, TResult> where TJob : QueuedJob<TKey>
     {
         private readonly IRepository<TJob, TKey> _repository;
-        
+
         protected readonly ILogger Logger;
 
         public JobRunner(IRepository<TJob, TKey> repository, ILogger logger)
@@ -36,7 +36,7 @@ namespace QueuedJobs.Abstract
         public async Task<TResult> ExecuteAsync(TKey id)
         {
             TResult result = default;
-            
+
             var errorContext = "starting";
             try
             {
@@ -45,7 +45,7 @@ namespace QueuedJobs.Abstract
                 if (!job.RequestType.Equals(typeof(TRequest).Name)) throw new Exception($"Job Id {id} request type {job.RequestType} does not match job runner request type {typeof(TRequest).Name}");
 
                 var request = JsonSerializer.Deserialize<TRequest>(job.RequestData);
-                
+
                 try
                 {
                     errorContext = "executing";
@@ -86,7 +86,7 @@ namespace QueuedJobs.Abstract
                         var message = $"Error executing job completion callback for job Id {job.Id}: {exc.Message}";
                         Logger.LogError(message);
                     }
-                }                
+                }
             }
             catch (Exception exc)
             {

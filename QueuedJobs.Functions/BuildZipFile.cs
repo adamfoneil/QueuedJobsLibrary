@@ -22,7 +22,7 @@ namespace QueuedJobs.Functions
     {
         [FunctionName("BuildZipFile")]
         public static void Run(
-            [QueueTrigger("zip-builder", Connection = "ConnectionString")]string data, 
+            [QueueTrigger("zip-builder", Connection = "ConnectionString")] string data,
             ILogger log, ExecutionContext context)
         {
             int id = int.Parse(data); // int because JobTracker is QueuedJob<int>
@@ -65,7 +65,7 @@ namespace QueuedJobs.Functions
                             {
                                 if (blob.Name.EndsWith(".zip")) continue; // don't include other zip files
                                 count++;
-                                if (count > maxFiles) break;                                                               
+                                if (count > maxFiles) break;
 
                                 var blobClient = new BlobClient(_storageConnection, request.ContainerName, blob.Name);
                                 using (var inputStream = await blobClient.OpenReadAsync())
@@ -74,7 +74,7 @@ namespace QueuedJobs.Functions
                                     using (var entryStream = entry.Open())
                                     {
                                         await inputStream.CopyToAsync(entryStream);
-                                    }                                    
+                                    }
                                 }
                             }
                         }
@@ -100,7 +100,6 @@ namespace QueuedJobs.Functions
                         ExpiresAfter = expirationDate,
                         BlobName = outputBlobClient.Name
                     };
-
                 }
             }
 
@@ -109,6 +108,6 @@ namespace QueuedJobs.Functions
                 // do nothing for now
                 await Task.CompletedTask;
             }
-        }       
+        }
     }
 }

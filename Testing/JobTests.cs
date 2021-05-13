@@ -30,13 +30,13 @@ namespace Testing
             var processor = new SampleJobRunner(logger);
             processor.ExecuteAsync(job.Id).Wait();
         }
-       
+
         [TestMethod]
         public void ZipBuilderJob()
         {
             // since this is testing a real job, I need to pass real connection strings from that project
             var dbConnection = Config["Values:ConnectionStrings:Database"];
-            var repo = new JobTrackerRepository(dbConnection);            
+            var repo = new JobTrackerRepository(dbConnection);
 
             var logger = LoggerFactory.Create(config => config.AddDebug()).CreateLogger("testing");
 
@@ -60,7 +60,7 @@ namespace Testing
             // and is a valid zip file
             var tempFile = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".zip");
             using (var downloadFile = File.Create(tempFile))
-            {                
+            {
                 response.Content.CopyToAsync(downloadFile).Wait();
             }
 

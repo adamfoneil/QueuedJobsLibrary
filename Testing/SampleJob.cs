@@ -20,7 +20,7 @@ namespace Testing
     public class OcrRequest
     {
         public string ContainerName { get; set; }
-        public string BlobName { get; set; }        
+        public string BlobName { get; set; }
     }
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace Testing
     public class OcrResult
     {
         public IEnumerable<string> Words { get; set; }
-    }    
+    }
 
     public class SampleJobRunner : JobRunner<Job, int, OcrRequest, OcrResult>
     {
@@ -38,7 +38,7 @@ namespace Testing
         }
 
         protected override async Task OnCompletedAsync(int id, Status status, OcrResult result)
-        {            
+        {
             await Task.CompletedTask;
         }
 
@@ -82,7 +82,7 @@ namespace Testing
                 await cn.SaveAsync(model);
                 return model;
             }
-        }       
+        }
 
         public async Task CreateTableIfNotExistsAsync()
         {
@@ -90,8 +90,8 @@ namespace Testing
             {
                 var exists = await cn.TableExistsAsync("queue", "Job");
                 if (!exists)
-                {                    
-                    await DataModel.CreateTablesAsync(new Type[] 
+                {
+                    await DataModel.CreateTablesAsync(new Type[]
                     {
                         typeof(Job)
                     }, cn);

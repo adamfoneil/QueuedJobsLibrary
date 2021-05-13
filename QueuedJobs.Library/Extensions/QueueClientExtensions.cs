@@ -23,7 +23,7 @@ namespace QueuedJobs.Extensions
         /// <summary>
         /// call this from your client projects to queue a job
         /// </summary>
-        public static async Task<TKey> QueueJobAsync<TJob, TRequest, TKey>(this QueueClient queueClient, 
+        public static async Task<TKey> QueueJobAsync<TJob, TRequest, TKey>(this QueueClient queueClient,
             string userName, TRequest request,
             IRepository<TJob, TKey> repository,
             ILogger logger) where TJob : QueuedJob<TKey>, new()
@@ -45,7 +45,7 @@ namespace QueuedJobs.Extensions
                 job.Status = Status.Aborted;
                 await repository.SaveAsync(job);
             }
-                
+
             return job.Id;
         }
 
@@ -61,7 +61,7 @@ namespace QueuedJobs.Extensions
             job.Started = null;
             job.Completed = null;
             job.Created = DateTime.UtcNow;
-            
+
             return await repository.SaveAsync(job);
         }
     }

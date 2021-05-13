@@ -22,15 +22,15 @@ namespace QueuedJobs.Models
     {
         public TKey Id { get; set; }
         [Required]
-        [MaxLength(50)]        
+        [MaxLength(50)]
         public string UserName { get; set; }
         [Required]
-        [MaxLength(50)]        
+        [MaxLength(50)]
         public string RequestType { get; set; }
         public string RequestData { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime? Started { get; set; }
-        public DateTime? Completed { get; set; }        
+        public DateTime? Completed { get; set; }
         public int? Duration { get; set; } // in seconds
         public Status Status { get; set; }
         public bool IsCleared { get; set; } // records that the user cleared this notification

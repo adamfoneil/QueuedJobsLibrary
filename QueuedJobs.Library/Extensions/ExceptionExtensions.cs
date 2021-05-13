@@ -8,8 +8,8 @@ namespace QueuedJobs.Extensions
         public static string FullMessage(this Exception exception)
         {
             string result = exception.Message;
-            
-            if (exception.InnerException !=  null)
+
+            if (exception.InnerException != null)
             {
                 int indent = 0;
                 var inner = exception.InnerException;
