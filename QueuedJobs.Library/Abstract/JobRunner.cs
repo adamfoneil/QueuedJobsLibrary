@@ -33,6 +33,7 @@ namespace QueuedJobs.Abstract
         /// </summary>
         public async Task ExecuteAsync(TKey id)
         {
+            var errorContext = "starting";
             try
             {
                 var job = await _repository.GetAsync(id);
@@ -44,6 +45,7 @@ namespace QueuedJobs.Abstract
                 TResult result = default;
                 try
                 {
+                    errorContext = "executing";
                     job.RetryCount++;
                     job.ExceptionData = null;
                     job.Status = Status.Running;
@@ -62,10 +64,13 @@ namespace QueuedJobs.Abstract
                 }
                 finally
                 {
+                    errorContext = "finishing";
+                    job.Completed = DateTime.UtcNow;
+                    job.Duration = Convert.ToInt32(job.Completed.Value.Subtract(job.Started.Value).TotalSeconds);
+                    await _repository.SaveAsync(job);
+
                     try
                     {
-                        job.Completed = DateTime.UtcNow;
-                        await _repository.SaveAsync(job);
                         await OnCompletedAsync(job.Id, job.Status, result);
                     }
                     catch (Exception exc)
@@ -77,7 +82,7 @@ namespace QueuedJobs.Abstract
             }
             catch (Exception exc)
             {
-                _logger.LogError(exc, exc.Message);
+                _logger.LogError(exc, $"While {errorContext}: {exc.Message}");
             }
         }
     }

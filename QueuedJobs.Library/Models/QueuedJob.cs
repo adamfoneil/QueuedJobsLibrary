@@ -1,6 +1,7 @@
 ﻿using AO.Models.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QueuedJobs.Models
 {
@@ -30,7 +31,8 @@ namespace QueuedJobs.Models
         public string RequestData { get; set; }
         public DateTime Created { get; set; } = DateTime.UtcNow;
         public DateTime? Started { get; set; }
-        public DateTime? Completed { get; set; }
+        public DateTime? Completed { get; set; }        
+        public int? Duration { get; set; } // in seconds
         public Status Status { get; set; }
         public bool IsCleared { get; set; } // records that the user cleared this notification
         public string ResultData { get; set; }
