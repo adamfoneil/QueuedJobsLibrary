@@ -33,8 +33,10 @@ namespace QueuedJobs.Abstract
         /// <summary>
         /// call this in your QueueTrigger Azure Function. The id will be the queue message data
         /// </summary>
-        public async Task ExecuteAsync(TKey id)
+        public async Task<TResult> ExecuteAsync(TKey id)
         {
+            TResult result = default;
+            
             var errorContext = "starting";
             try
             {
@@ -43,8 +45,7 @@ namespace QueuedJobs.Abstract
                 if (!job.RequestType.Equals(typeof(TRequest).Name)) throw new Exception($"Job Id {id} request type {job.RequestType} does not match job runner request type {typeof(TRequest).Name}");
 
                 var request = JsonSerializer.Deserialize<TRequest>(job.RequestData);
-
-                TResult result = default;
+                
                 try
                 {
                     errorContext = "executing";
@@ -85,12 +86,14 @@ namespace QueuedJobs.Abstract
                         var message = $"Error executing job completion callback for job Id {job.Id}: {exc.Message}";
                         Logger.LogError(message);
                     }
-                }
+                }                
             }
             catch (Exception exc)
             {
                 Logger.LogError(exc, $"While {errorContext}: {exc.Message}");
             }
+
+            return result;
         }
     }
 }

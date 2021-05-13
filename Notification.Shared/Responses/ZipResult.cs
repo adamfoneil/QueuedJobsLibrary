@@ -12,5 +12,9 @@ namespace Notification.Shared.Responses
         /// when does link stop working?
         /// </summary>
         public DateTime ExpiresAfter { get; set; }
+        /// <summary>
+        /// for direct blob access by downstream processes
+        /// </summary>
+        public string BlobName { get; set; }
     }
 }

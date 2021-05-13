@@ -57,47 +57,50 @@ namespace QueuedJobs.Functions
 
                 using (var outputStream = new MemoryStream())
                 {
-                    using (var outputZip = new ZipArchive(outputStream, ZipArchiveMode.Create))
+                    using (var outputZip = new ZipArchive(outputStream, ZipArchiveMode.Create, true))
                     {
                         await foreach (var page in pages)
                         {
                             foreach (var blob in page.Values)
                             {
+                                if (blob.Name.EndsWith(".zip")) continue; // don't include other zip files
                                 count++;
-                                if (count > maxFiles) break;
+                                if (count > maxFiles) break;                                                               
 
                                 var blobClient = new BlobClient(_storageConnection, request.ContainerName, blob.Name);
-                                var entry = outputZip.CreateEntry(blob.Name);
-                                using (var entryStream = entry.Open())
+                                using (var inputStream = await blobClient.OpenReadAsync())
                                 {
-                                    using (var inputStream = await blobClient.OpenReadAsync())
+                                    var entry = outputZip.CreateEntry(blob.Name);
+                                    using (var entryStream = entry.Open())
                                     {
                                         await inputStream.CopyToAsync(entryStream);
-                                    }
+                                    }                                    
                                 }
                             }
                         }
+                    }
 
-                        var outputBlobClient = new BlobClient(_storageConnection, request.ContainerName, StringId.New(8, StringIdRanges.Lower | StringIdRanges.Numeric) + ".zip");
-                        outputStream.Position = 0;
-                        await outputBlobClient.UploadAsync(outputStream, new BlobUploadOptions()
+                    var outputBlobClient = new BlobClient(_storageConnection, request.ContainerName, StringId.New(8, StringIdRanges.Lower | StringIdRanges.Numeric) + ".zip");
+                    outputStream.Position = 0;
+                    await outputBlobClient.UploadAsync(outputStream, new BlobUploadOptions()
+                    {
+                        HttpHeaders = new BlobHttpHeaders()
                         {
-                            HttpHeaders = new BlobHttpHeaders()
-                            {
-                                ContentType = "application/zip"
-                            }
-                        });
+                            ContentType = "application/zip"
+                        }
+                    });
 
-                        var expirationDate = DateTime.UtcNow.AddDays(3);
+                    var expirationDate = DateTime.UtcNow.AddDays(3);
 
-                        var sasUri = outputBlobClient.GenerateSasUri(BlobSasPermissions.Read, expirationDate);
+                    var sasUri = outputBlobClient.GenerateSasUri(BlobSasPermissions.Read, expirationDate);
 
-                        return new ZipResult()
-                        {
-                            Url = sasUri.ToString(),
-                            ExpiresAfter = expirationDate
-                        };
-                    }                   
+                    return new ZipResult()
+                    {
+                        Url = sasUri.ToString(),
+                        ExpiresAfter = expirationDate,
+                        BlobName = outputBlobClient.Name
+                    };
+
                 }
             }
 
