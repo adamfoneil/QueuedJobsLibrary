@@ -10,12 +10,13 @@ namespace QueuedJobs.Abstract
     public abstract class JobRunner<TJob, TKey, TRequest, TResult> where TJob : QueuedJob<TKey>
     {
         private readonly IRepository<TJob, TKey> _repository;
-        private readonly ILogger _logger;
+        
+        protected readonly ILogger Logger;
 
         public JobRunner(IRepository<TJob, TKey> repository, ILogger logger)
         {
             _repository = repository;
-            _logger = logger;
+            Logger = logger;
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace QueuedJobs.Abstract
                 }
                 catch (Exception exc)
                 {
-                    _logger.LogError(exc, $"Job Id {job.Id} failed: {exc.Message}");
+                    Logger.LogError(exc, $"Job Id {job.Id} failed: {exc.Message}");
                     job.Status = Status.Failed;
                     job.ExceptionData = JsonSerializer.Serialize(exc);
                 }
@@ -76,13 +77,13 @@ namespace QueuedJobs.Abstract
                     catch (Exception exc)
                     {
                         var message = $"Error executing job completion callback for job Id {job.Id}: {exc.Message}";
-                        _logger.LogError(message);
+                        Logger.LogError(message);
                     }
                 }
             }
             catch (Exception exc)
             {
-                _logger.LogError(exc, $"While {errorContext}: {exc.Message}");
+                Logger.LogError(exc, $"While {errorContext}: {exc.Message}");
             }
         }
     }
