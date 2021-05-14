@@ -26,6 +26,7 @@
     {
         await base.OnInitializedAsync();
         await RefreshList();
+        Jobs.StatusUpdated += JobUpdated;
     }
 
     async Task RefreshList()
@@ -42,6 +43,11 @@
         }, Jobs, Logger);
 
         await RefreshList();
+    }
+
+    void JobUpdated(object sender, JobTracker job)
+    {
+        Logger.LogInformation($"Job Id {job.Id} was updated");
     }
 
     async Task OnCleared()

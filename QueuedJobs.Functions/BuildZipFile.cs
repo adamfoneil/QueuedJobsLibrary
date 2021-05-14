@@ -34,7 +34,9 @@ namespace QueuedJobs.Functions
 
             var storageConnection = config["ConnectionStrings:Storage"];
             log.LogDebug($"Storage connection = {storageConnection}");
-            new ZipFileBuilder(storageConnection, repo, log)
+
+            var statusUpdateUrl = config["StatusUpdateUrl"];
+            new ZipFileBuilder(storageConnection, (id) => $"{statusUpdateUrl}/{id}", repo, log)
                 .ExecuteAsync(id)
                 .Wait();
         }
@@ -42,10 +44,12 @@ namespace QueuedJobs.Functions
         public class ZipFileBuilder : JobRunner<JobTracker, int, ZipRequest, ZipResult>
         {
             private readonly string _storageConnection;
+            private readonly Func<int, string> _endpointBuilder;
 
-            public ZipFileBuilder(string storageConnection, JobTrackerRepository repository, ILogger logger) : base(repository, logger)
+            public ZipFileBuilder(string storageConnection, Func<int, string> endpointBuilder, JobTrackerRepository repository, ILogger logger) : base(repository, logger)
             {
                 _storageConnection = storageConnection;
+                _endpointBuilder = endpointBuilder;
             }
 
             protected override async Task<ZipResult> OnExecuteAsync(ZipRequest request)
@@ -102,13 +106,10 @@ namespace QueuedJobs.Functions
                         BlobName = outputBlobClient.Name
                     };
                 }
-            }
+            }            
 
-            protected override async Task OnCompletedAsync(int id, Status status, ZipResult result)
-            {
-                // do nothing for now
-                await Task.CompletedTask;
-            }
+            protected override async Task OnStatusUpdatedAsync(int id, Status status) => 
+                await PostStatusUpdateAsync(id, _endpointBuilder.Invoke(id));            
         }
     }
 }

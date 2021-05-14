@@ -37,11 +37,6 @@ namespace Testing
         {
         }
 
-        protected override async Task OnCompletedAsync(int id, Status status, OcrResult result)
-        {
-            await Task.CompletedTask;
-        }
-
         protected override async Task<OcrResult> OnExecuteAsync(OcrRequest request)
         {
             Thread.Sleep(3000);
@@ -55,6 +50,12 @@ namespace Testing
                     "other"
                 }
             });
+        }
+
+        protected override async Task OnStatusUpdatedAsync(int id, Status status)
+        {
+            // do nothing
+            await Task.CompletedTask;
         }
     }
 

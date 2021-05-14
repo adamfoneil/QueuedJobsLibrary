@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Notification.Demo.Services;
 using Notification.Shared;
 
@@ -30,8 +29,6 @@ namespace Notification.Demo
 
             var storageConnection = Configuration.GetConnectionString("Storage");
             services.AddScoped(sp => new QueueManager(storageConnection));
-
-            //services.AddLogging(config => config.AddDebug());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,13 +47,18 @@ namespace Notification.Demo
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapFallbackToPage("/_Host");               
+                endpoints.MapPost("/JobUpdated/{id:int}", async (context) =>
+                {
+                    var repo = context.RequestServices.GetRequiredService<JobTrackerRepository>();
+                    var id = int.Parse(context.Request.RouteValues["id"].ToString());
+                    await repo.OnStatusUpdatedAsync(id);
+                });
             });
         }
     }

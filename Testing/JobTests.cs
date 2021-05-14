@@ -50,7 +50,7 @@ namespace Testing
 
             var storageConnection = Config["Values:ConnectionStrings:Storage"];
 
-            var function = new ZipFileBuilder(storageConnection, repo, logger);
+            var function = new ZipFileBuilder(storageConnection, (id) => "none", repo, logger) { PostStatusUpdates = false };
             var result = function.ExecuteAsync(job.Id).Result;
 
             // verify the download works
