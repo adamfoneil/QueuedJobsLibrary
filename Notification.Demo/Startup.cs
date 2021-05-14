@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Notification.Demo.Data;
+using Microsoft.Extensions.Logging;
+using Notification.Demo.Services;
 using Notification.Shared;
 
 namespace Notification.Demo
@@ -26,6 +27,11 @@ namespace Notification.Demo
 
             var connectionString = Configuration.GetConnectionString("Database");
             services.AddScoped(sp => new JobTrackerRepository(connectionString));
+
+            var storageConnection = Configuration.GetConnectionString("Storage");
+            services.AddScoped(sp => new QueueManager(storageConnection));
+
+            services.AddLogging(config => config.AddDebug());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

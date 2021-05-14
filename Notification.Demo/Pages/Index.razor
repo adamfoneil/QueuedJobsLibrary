@@ -1,8 +1,20 @@
 ﻿@page "/"
 @inject JobTrackerRepository Jobs
+@inject QueueManager QueueManager
+@inject ILogger Logger
 
 <h1>Notification Demo</h1>
 
+<button class="btn btn-primary" @onclick="RunTask">Run Task</button>
+
+@if (MyJobs != null)
+{
+    foreach (var job in MyJobs)
+    {
+        <BackgroundJob JobInfo="job">
+        </BackgroundJob>
+    }
+}
 
 
 @code { 
@@ -15,5 +27,14 @@
         await base.OnInitializedAsync();
 
         MyJobs = await Jobs.ActiveJobsByUser(userName);
+    }
+
+    async Task RunTask()
+    {
+        await QueueManager.ZipBuilder.QueueJobAsync(userName, new ZipRequest()
+        {
+            ContainerName = "sample-uploads",
+            BlobPrefix = "anonUser"
+        }, Jobs, Logger);
     }
 }

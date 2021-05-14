@@ -22,7 +22,7 @@ namespace QueuedJobs.Functions
     {
         [FunctionName("BuildZipFile")]
         public static void Run(
-            [QueueTrigger("zip-builder", Connection = "ConnectionString")] string data,
+            [QueueTrigger(JobTracker.ZipBuilderQueue, Connection = "ConnectionString")] string data,
             ILogger log, ExecutionContext context)
         {
             int id = int.Parse(data); // int because JobTracker is QueuedJob<int>

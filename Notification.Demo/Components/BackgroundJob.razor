@@ -1,6 +1,4 @@
-﻿@typeparam TResult
-
-@if (JobInfo != null)
+﻿@if (JobInfo != null)
 {
     <h3>Background Job: @JobInfo.RequestType</h3>
     <p>
@@ -14,13 +12,10 @@
             <span><img src="~/img/loading.gif"/></span>
         }
     </p>
-
-    @if (Result != null)
-    {
-        <div>
-            @ChildContent
-        </div>
-    }
+    
+    <div>
+        @ChildContent
+    </div>    
 }
 
 <hr/>
@@ -28,9 +23,6 @@
 @code {
     [Parameter]
     public JobTracker JobInfo { get; set; }
-
-    [Parameter]
-    public TResult Result { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
