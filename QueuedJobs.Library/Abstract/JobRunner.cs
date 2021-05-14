@@ -36,11 +36,13 @@ namespace QueuedJobs.Abstract
         public async Task<TResult> ExecuteAsync(TKey id)
         {
             TResult result = default;
+            TJob job = default;
 
             var errorContext = "starting";
+            
             try
             {
-                var job = await _repository.GetAsync(id);
+                job = await _repository.GetAsync(id);
                 if (job == null) throw new Exception($"Job Id {id} not found.");
                 if (!job.RequestType.Equals(typeof(TRequest).Name)) throw new Exception($"Job Id {id} request type {job.RequestType} does not match job runner request type {typeof(TRequest).Name}");
 
@@ -90,6 +92,16 @@ namespace QueuedJobs.Abstract
             }
             catch (Exception exc)
             {
+                if (job != null)
+                {
+                    job.Status = Status.Aborted;
+                    job.ExceptionData = JsonSerializer.Serialize(new
+                    {
+                        message = exc.FullMessage()
+                    });
+                    await _repository.SaveAsync(job);
+                }
+
                 Logger.LogError(exc, $"While {errorContext}: {exc.Message}");
             }
 

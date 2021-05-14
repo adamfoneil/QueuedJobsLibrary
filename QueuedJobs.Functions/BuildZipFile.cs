@@ -22,17 +22,18 @@ namespace QueuedJobs.Functions
     {
         [FunctionName("BuildZipFile")]
         public static void Run(
-            [QueueTrigger(JobTracker.ZipBuilderQueue, Connection = "ConnectionString")] string data,
+            [QueueTrigger(JobTracker.ZipBuilderQueue, Connection = "ConnectionStrings:Storage")] string data,
             ILogger log, ExecutionContext context)
         {
             int id = int.Parse(data); // int because JobTracker is QueuedJob<int>
             var config = context.GetConfig();
 
             var databaseConnection = config["ConnectionStrings:Database"];
+            log.LogDebug($"Database connection = {databaseConnection}");
             var repo = new JobTrackerRepository(databaseConnection);
 
             var storageConnection = config["ConnectionStrings:Storage"];
-
+            log.LogDebug($"Storage connection = {storageConnection}");
             new ZipFileBuilder(storageConnection, repo, log)
                 .ExecuteAsync(id)
                 .Wait();

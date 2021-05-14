@@ -1,11 +1,11 @@
 ﻿@page "/"
 @inject JobTrackerRepository Jobs
 @inject QueueManager QueueManager
-@inject ILogger Logger
+@inject ILogger<Index> Logger
 
 <h1>Notification Demo</h1>
 
-<button class="btn btn-primary" @onclick="RunTask">Run Task</button>
+<button class="btn btn-primary" @onclick="RunTask">Queue a Task</button>
 
 @if (MyJobs != null)
 {

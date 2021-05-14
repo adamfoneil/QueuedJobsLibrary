@@ -1,3 +1,381 @@
 {
-  "Actions": null
+  "Actions": {
+    "live": [
+      {
+        "Type": 2,
+        "ObjectType": 1,
+        "ObjectName": "dbo.AspNetRoles"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 1,
+        "ObjectName": "dbo.Plan"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 1,
+        "ObjectName": "dbo.Account"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 1,
+        "ObjectName": "dbo.AspNetRoleClaims"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 1,
+        "ObjectName": "dbo.AspNetUsers"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 1,
+        "ObjectName": "dbo.AspNetUserTokens"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_Renewal"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_AccountUser"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "U_AccountUser_Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_AspNetUserClaims"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "IX_AspNetUserClaims_UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_AspNetUserLogins"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "IX_AspNetUserLogins_UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_AspNetUserRoles"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "IX_AspNetUserRoles_RoleId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_Handler"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "U_Handler_Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 3,
+        "ObjectName": "PK_Log"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_Handler_AccountId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_Renewal_AccountId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_AccountUser_AccountId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_AspNetUserRoles_AspNetRoles_RoleId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_AspNetUserClaims_AspNetUsers_UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_AspNetUserLogins_AspNetUsers_UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_AspNetUserRoles_AspNetUsers_UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_AccountUser_UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_Log_HandlerId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_Handler_LastLogId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 4,
+        "ObjectName": "FK_Renewal_PlanId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.AccountId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.PlanId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.Price"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.TransactionId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.Timestamp"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Renewal.PayerEmail"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.AccountId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.IsAdmin"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.IsEnabled"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.DateCreated"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.CreatedBy"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.DateModified"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AccountUser.ModifiedBy"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserClaims.Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserClaims.UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserClaims.ClaimType"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserClaims.ClaimValue"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserLogins.LoginProvider"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserLogins.ProviderKey"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserLogins.ProviderDisplayName"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserLogins.UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserRoles.UserId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.AspNetUserRoles.RoleId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.Name"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.AccountId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.Url"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.IsActive"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.DateCreated"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.CreatedBy"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.DateModified"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.ModifiedBy"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Handler.LastLogId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.Id"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.HandlerId"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.Timestamp"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.Url"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.From"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.To"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.Subject"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.Content"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.IsSuccessful"
+      },
+      {
+        "Type": 2,
+        "ObjectType": 2,
+        "ObjectName": "dbo.Log.ErrorMessage"
+      }
+    ]
+  }
 }

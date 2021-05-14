@@ -7,6 +7,7 @@ namespace QueuedJobs.Functions.Extensions
     {
         public static IConfiguration GetConfig(this ExecutionContext context) => new ConfigurationBuilder()
             .AddJsonFile("local.settings.json", true)
+            .AddEnvironmentVariables()
             .Build();
     }
 }

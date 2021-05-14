@@ -31,7 +31,7 @@ namespace Notification.Demo
             var storageConnection = Configuration.GetConnectionString("Storage");
             services.AddScoped(sp => new QueueManager(storageConnection));
 
-            services.AddLogging(config => config.AddDebug());
+            //services.AddLogging(config => config.AddDebug());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
