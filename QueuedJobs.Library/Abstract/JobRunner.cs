@@ -69,6 +69,7 @@ namespace QueuedJobs.Abstract
                 }
                 catch (Exception exc)
                 {
+                    errorContext = "failing";
                     Logger.LogError(exc, $"Job Id {job.Id} failed: {exc.Message}");
                     job.Status = Status.Failed;
                     job.ExceptionData = JsonSerializer.Serialize(new
@@ -94,6 +95,7 @@ namespace QueuedJobs.Abstract
                     job.Status = Status.Aborted;
                     job.ExceptionData = JsonSerializer.Serialize(new
                     {
+                        errorContext,
                         message = exc.FullMessage()
                     });
                     await _repository.SaveAsync(job);
@@ -112,7 +114,7 @@ namespace QueuedJobs.Abstract
             {                
                 var response = await _client.PostAsync(endpoint, null);
                 response.EnsureSuccessStatusCode();
-                Logger.LogTrace($"Posted status update on job {id} to {endpoint}");
+                Logger.LogTrace($"Posted status update on job Id {id} at URL {endpoint}");
             }
             catch (Exception exc)
             {

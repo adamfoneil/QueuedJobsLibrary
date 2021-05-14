@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Notification.Shared;
 using Notification.Shared.Requests;
 using QueuedJobs.Extensions;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -32,7 +33,20 @@ namespace Testing
         }
 
         [TestMethod]
-        public void ZipBuilderJob()
+        public void ZipBuilderJobWithoutUpdates()
+        {
+            ZipBuilderInner(false);
+        }
+
+        [TestMethod]
+        public void ZipBuilderJobWithUpdates()
+        {
+            // make sure demo app is running, and ngrok session is running
+            // ngrok http -region=us -hostname=aosoftware.ngrok.io https://localhost:44377
+            ZipBuilderInner(true);
+        }
+
+        private void ZipBuilderInner(bool postUpdates)
         {
             // since this is testing a real job, I need to pass real connection strings from that project
             var dbConnection = Config["Values:ConnectionStrings:Database"];
@@ -50,7 +64,7 @@ namespace Testing
 
             var storageConnection = Config["Values:ConnectionStrings:Storage"];
 
-            var function = new ZipFileBuilder(storageConnection, (id) => "none", repo, logger) { PostStatusUpdates = false };
+            var function = new ZipFileBuilder(storageConnection, (id) => $"https://localhost:44377/JobUpdated/{id}", repo, logger) { PostStatusUpdates = postUpdates };
             var result = function.ExecuteAsync(job.Id).Result;
 
             // verify the download works
