@@ -25,7 +25,7 @@ namespace Notification.Demo
             services.AddServerSideBlazor();
 
             var connectionString = Configuration.GetConnectionString("Database");
-            services.AddScoped(sp => new JobTrackerRepository(connectionString));
+            services.AddSingleton(sp => new JobTrackerRepository(connectionString));
 
             var storageConnection = Configuration.GetConnectionString("Storage");
             services.AddScoped(sp => new QueueManager(storageConnection));

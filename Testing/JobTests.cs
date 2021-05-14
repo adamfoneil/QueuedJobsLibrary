@@ -41,8 +41,7 @@ namespace Testing
         [TestMethod]
         public void ZipBuilderJobWithUpdates()
         {
-            // make sure demo app is running, and ngrok session is running
-            // ngrok http -region=us -hostname=aosoftware.ngrok.io https://localhost:44377
+            // make sure demo app is running (ctrl+F5)            
             ZipBuilderInner(true);
         }
 

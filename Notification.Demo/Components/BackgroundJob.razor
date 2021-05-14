@@ -1,16 +1,27 @@
 ﻿@inject JobTrackerRepository Jobs
+@implements IDisposable
 
 @if (JobInfo != null)
 {
     <h3>Background Job: @JobInfo.RequestType, Id = @JobInfo.Id</h3>
     <div class="d-flex align-items-center">
+        @if (JobInfo.IsRunning)
+        {
+            <div>
+                <span><img src="~/img/loading.gif"/>Running</span>
+            </div>                        
+        }
+
         <div>
             <span>Status: @JobInfo.Status.ToString()</span>            
         </div>
 
-        <div>
-            <span>Started: @JobInfo.Started</span>
-        </div>
+        @if (JobInfo.Started.HasValue)
+        {
+            <div>
+                <span>Started: @JobInfo.Started</span>
+            </div>
+        }
                
         @if (JobInfo.Completed.HasValue)
         {
@@ -18,13 +29,6 @@
                 <span>Completed: @JobInfo.Completed</span>
                 <span class="ml-2">Duration: @JobInfo.Duration sec</span>
             </div>
-        }
-
-        @if (JobInfo.IsRunning)
-        {
-            <div>
-                <span><img src="~/img/loading.gif"/></span>
-            </div>                        
         }
 
         <div>
@@ -39,7 +43,13 @@
 
 <hr/>
 
-@code {
+@code { 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Jobs.StatusUpdated += JobUpdated;
+    }
+
     [Parameter]
     public JobTracker JobInfo { get; set; }
 
@@ -53,5 +63,19 @@
     {
         await Jobs.ClearNotificationAsync(JobInfo.Id);
         await Cleared.InvokeAsync();
+    }
+
+    void JobUpdated(JobTracker job)
+    {
+        if (job.Id == JobInfo.Id)
+        {
+            JobInfo = job;
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        Jobs.StatusUpdated -= JobUpdated;
     }
 }

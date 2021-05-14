@@ -3,6 +3,7 @@
 @inject QueueManager QueueManager
 @inject ILogger<Index> Logger
 
+
 <h1>Notification Demo</h1>
 
 <button class="btn btn-primary" @onclick="RunTask">Queue a Task</button>
@@ -25,8 +26,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        await RefreshList();
-        Jobs.StatusUpdated += JobUpdated;
+        await RefreshList();        
     }
 
     async Task RefreshList()
@@ -44,14 +44,10 @@
 
         await RefreshList();
     }
-
-    void JobUpdated(object sender, JobTracker job)
-    {
-        Logger.LogInformation($"Job Id {job.Id} was updated");
-    }
-
+    
     async Task OnCleared()
     {
         await RefreshList();
     }
+
 }

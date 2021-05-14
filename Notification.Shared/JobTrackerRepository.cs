@@ -13,7 +13,7 @@ namespace Notification.Shared
     {
         private readonly string _connectionString;
 
-        public EventHandler<JobTracker> StatusUpdated;
+        public event Action<JobTracker> StatusUpdated;
 
         public JobTrackerRepository(string connectionString)
         {
@@ -62,7 +62,7 @@ namespace Notification.Shared
             using (var cn = new SqlConnection(_connectionString))
             {
                 var job = await cn.GetAsync<JobTracker>(id);
-                StatusUpdated?.Invoke(this, job);
+                StatusUpdated?.Invoke(job);
             }
         }
     }
