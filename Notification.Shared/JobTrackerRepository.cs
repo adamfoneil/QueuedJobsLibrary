@@ -43,5 +43,15 @@ namespace Notification.Shared
                     new { userName });
             }
         }
+
+        public async Task ClearNotificationAsync(int id)
+        {
+            using (var cn = new SqlConnection(_connectionString))
+            {
+                var job = await cn.GetAsync<JobTracker>(id);
+                job.IsCleared = true;
+                await cn.UpdateAsync(job, m => m.IsCleared);
+            }
+        }
     }
 }

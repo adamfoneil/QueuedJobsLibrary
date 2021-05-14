@@ -11,7 +11,7 @@
 {
     foreach (var job in MyJobs)
     {
-        <BackgroundJob JobInfo="job">
+        <BackgroundJob JobInfo="job" Cleared="OnCleared">
         </BackgroundJob>
     }
 }
@@ -25,7 +25,11 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await RefreshList();
+    }
 
+    async Task RefreshList()
+    {
         MyJobs = await Jobs.ActiveJobsByUser(userName);
     }
 
@@ -36,5 +40,12 @@
             ContainerName = "sample-uploads",
             BlobPrefix = "anonUser"
         }, Jobs, Logger);
+
+        await RefreshList();
+    }
+
+    async Task OnCleared()
+    {
+        await RefreshList();
     }
 }

@@ -1,17 +1,36 @@
-﻿@if (JobInfo != null)
+﻿@inject JobTrackerRepository Jobs
+
+@if (JobInfo != null)
 {
-    <h3>Background Job: @JobInfo.RequestType</h3>
-    <p>
-        <span>Status: @JobInfo.Status.ToString()</span>
-        <span> | </span>
-        <span>Started: @JobInfo.Started</span>
+    <h3>Background Job: @JobInfo.RequestType, Id = @JobInfo.Id</h3>
+    <div class="d-flex align-items-center">
+        <div>
+            <span>Status: @JobInfo.Status.ToString()</span>            
+        </div>
+
+        <div>
+            <span>Started: @JobInfo.Started</span>
+        </div>
+               
+        @if (JobInfo.Completed.HasValue)
+        {
+            <div>
+                <span>Completed: @JobInfo.Completed</span>
+                <span class="ml-2">Duration: @JobInfo.Duration sec</span>
+            </div>
+        }
 
         @if (JobInfo.IsRunning)
         {
-            <span> | </span>
-            <span><img src="~/img/loading.gif"/></span>
+            <div>
+                <span><img src="~/img/loading.gif"/></span>
+            </div>                        
         }
-    </p>
+
+        <div>
+            <button class="btn btn-sm btn-light ml-2" @onclick="ClearNotification">clear</button>
+        </div>
+    </div>
     
     <div>
         @ChildContent
@@ -26,4 +45,13 @@
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback Cleared { get; set; }
+
+    async Task ClearNotification()
+    {
+        await Jobs.ClearNotificationAsync(JobInfo.Id);
+        await Cleared.InvokeAsync();
+    }
 }
