@@ -112,6 +112,7 @@ namespace QueuedJobs.Abstract
             {                
                 var response = await _client.PostAsync(endpoint, null);
                 response.EnsureSuccessStatusCode();
+                Logger.LogTrace($"Posted status update on job {id} to {endpoint}");
             }
             catch (Exception exc)
             {
