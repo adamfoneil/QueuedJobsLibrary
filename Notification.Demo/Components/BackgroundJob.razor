@@ -44,9 +44,9 @@
 <hr/>
 
 @code { 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await base.OnInitializedAsync();
+        base.OnInitialized();
         Jobs.StatusUpdated += JobUpdated;
     }
 
