@@ -1,4 +1,5 @@
 ﻿using Azure.Storage.Queues;
+using Microsoft.AspNetCore.Components;
 using Notification.Shared.Models;
 using System.Collections.Generic;
 
@@ -9,13 +10,13 @@ namespace Notification.Demo.Services
     /// </summary>
     public class QueueManager
     {
-        private readonly string _connectionString;
-        private readonly Dictionary<string, QueueClient> _queues;
+        private readonly string _storageConnection;
+        private readonly Dictionary<string, QueueClient> _queues;        
 
         public QueueManager(string connectionString)
         {
-            _connectionString = connectionString;
-            _queues = new Dictionary<string, QueueClient>();
+            _storageConnection = connectionString;
+            _queues = new Dictionary<string, QueueClient>();            
         }
 
         public QueueClient this[string queueName]
@@ -24,7 +25,7 @@ namespace Notification.Demo.Services
             {
                 if (!_queues.ContainsKey(queueName))
                 {
-                    _queues.Add(queueName, new QueueClient(_connectionString, queueName));
+                    _queues.Add(queueName, new QueueClient(_storageConnection, queueName));
                 }
 
                 return _queues[queueName];

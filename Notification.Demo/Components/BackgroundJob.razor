@@ -47,7 +47,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Jobs.StatusUpdated += JobUpdated;
+        Jobs.OnJobUpdated += JobUpdated;
     }
 
     [Parameter]
@@ -74,8 +74,5 @@
         }
     }
 
-    public void Dispose()
-    {
-        Jobs.StatusUpdated -= JobUpdated;
-    }
+    public void Dispose() => Jobs.OnJobUpdated -= JobUpdated;
 }

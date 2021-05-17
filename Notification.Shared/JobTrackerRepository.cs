@@ -13,12 +13,12 @@ namespace Notification.Shared
     {
         private readonly string _connectionString;
 
-        public event Action<JobTracker> StatusUpdated;
-
         public JobTrackerRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
+
+        public event Action<JobTracker> OnJobUpdated;
 
         public async Task<JobTracker> GetAsync(int key)
         {
@@ -55,14 +55,14 @@ namespace Notification.Shared
                 job.IsCleared = true;
                 await cn.UpdateAsync(job, m => m.IsCleared);
             }
-        }
+        }       
 
-        public async Task OnStatusUpdatedAsync(int id)
+        public async Task OnJobUpdatedAsync(int id)
         {
             using (var cn = new SqlConnection(_connectionString))
             {
                 var job = await cn.GetAsync<JobTracker>(id);
-                StatusUpdated?.Invoke(job);
+                OnJobUpdated?.Invoke(job);
             }
         }
     }
