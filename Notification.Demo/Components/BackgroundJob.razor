@@ -3,12 +3,12 @@
 
 @if (JobInfo != null)
 {
-    <h3>Background Job: @JobInfo.RequestType, Id = @JobInfo.Id</h3>
+    <h3>Background Job: @JobInfo.RequestType, Id = @JobInfo.Id</h3>    
     <div class="d-flex align-items-center">
         @if (JobInfo.IsRunning)
         {
             <div>
-                <span><img src="~/img/loading.gif"/>Running</span>
+                <span><img src="/img/loading.gif"/>Running</span>
             </div>                        
         }
 
@@ -70,7 +70,7 @@
         if (job.Id == JobInfo.Id)
         {
             JobInfo = job;
-            StateHasChanged(); // doesn't work: "current thread is not associated with the Dispatcher..."
+            InvokeAsync(StateHasChanged);            
         }
     }
 
