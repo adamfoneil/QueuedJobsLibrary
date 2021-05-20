@@ -70,7 +70,7 @@
         if (job.Id == JobInfo.Id)
         {
             JobInfo = job;
-            StateHasChanged(); // doesn't work
+            StateHasChanged(); // doesn't work: "current thread is not associated with the Dispatcher..."
         }
     }
 
