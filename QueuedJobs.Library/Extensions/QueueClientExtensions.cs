@@ -26,7 +26,7 @@ namespace QueuedJobs.Extensions
         public static async Task<TKey> QueueJobAsync<TJob, TRequest, TKey>(this QueueClient queueClient,
             string userName, TRequest request,
             IRepository<TJob, TKey> repository,
-            ILogger logger) where TJob : QueuedJob<TKey>, new()
+            ILogger logger) where TJob : BackgroundJobInfo<TKey>, new()
         {
             // this enables visibility of the job over its lifetime (enabling dashboards, notifications, retry and tracking features)
             var job = await SaveJobAsync(repository, userName, request);
@@ -51,7 +51,7 @@ namespace QueuedJobs.Extensions
 
         public static async Task<TJob> SaveJobAsync<TJob, TRequest, TKey>(
             this IRepository<TJob, TKey> repository, string userName, TRequest request)
-            where TJob : QueuedJob<TKey>, new()
+            where TJob : BackgroundJobInfo<TKey>, new()
         {
             var job = new TJob();
             job.UserName = userName;

@@ -18,7 +18,7 @@ namespace QueuedJobs.Models
     /// and enable notifications to display. This would normally be implemented
     /// as a database table (but it really could be anything storable)
     /// </summary>    
-    public abstract class QueuedJob<TKey> : IModel<TKey>
+    public abstract class BackgroundJobInfo<TKey> : IModel<TKey>
     {
         public TKey Id { get; set; }
         [Required]
