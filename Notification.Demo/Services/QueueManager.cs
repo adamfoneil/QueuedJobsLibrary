@@ -1,5 +1,4 @@
 ﻿using Azure.Storage.Queues;
-using Microsoft.AspNetCore.Components;
 using Notification.Shared.Models;
 using System.Collections.Generic;
 

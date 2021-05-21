@@ -44,7 +44,7 @@ namespace QueuedJobs.Abstract
             TJob job = default;
 
             var errorContext = "starting";
-            
+
             try
             {
                 job = await _repository.GetAsync(id);
@@ -85,7 +85,7 @@ namespace QueuedJobs.Abstract
                     job.Completed = DateTime.UtcNow;
                     job.Duration = Convert.ToInt32(job.Completed.Value.Subtract(job.Started.Value).TotalSeconds);
                     await _repository.SaveAsync(job);
-                    if (PostStatusUpdates) await OnStatusUpdatedAsync(id, job.Status);                    
+                    if (PostStatusUpdates) await OnStatusUpdatedAsync(id, job.Status);
                 }
             }
             catch (Exception exc)
@@ -111,7 +111,7 @@ namespace QueuedJobs.Abstract
         protected async Task PostStatusUpdateAsync(TKey id, string endpoint)
         {
             try
-            {                
+            {
                 var response = await _client.PostAsync(endpoint, null);
                 response.EnsureSuccessStatusCode();
                 Logger.LogTrace($"Posted status update on job Id {id} at URL {endpoint}");
@@ -119,7 +119,7 @@ namespace QueuedJobs.Abstract
             catch (Exception exc)
             {
                 Logger.LogError(exc, $"Error posting status update for job Id {id} at URL {endpoint}: {exc.Message}");
-            }            
+            }
         }
     }
 }
