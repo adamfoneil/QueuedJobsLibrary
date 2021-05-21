@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace QueuedJobs.Abstract
 {
-    public abstract class BackgroundJob<TJob, TKey, TRequest, TResult> where TJob : BackgroundJobInfo<TKey>
+    public abstract class BackgroundJobBase<TJob, TKey, TRequest, TResult> where TJob : BackgroundJobInfo<TKey>
     {
         private static HttpClient _client = new HttpClient();
 
@@ -19,7 +19,7 @@ namespace QueuedJobs.Abstract
 
         public bool PostStatusUpdates { get; set; } = true;
 
-        public BackgroundJob(IRepository<TJob, TKey> repository, ILogger logger)
+        public BackgroundJobBase(IRepository<TJob, TKey> repository, ILogger logger)
         {
             _repository = repository;
             Logger = logger;

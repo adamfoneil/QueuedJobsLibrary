@@ -41,7 +41,7 @@ namespace QueuedJobs.Functions
                 .Wait();
         }
 
-        public class ZipFileBuilder : BackgroundJob<JobTracker, int, ZipRequest, ZipResult>
+        public class ZipFileBuilder : BackgroundJobBase<JobTracker, int, ZipRequest, ZipResult>
         {
             private readonly string _storageConnection;
             private readonly Func<int, string> _endpointBuilder;

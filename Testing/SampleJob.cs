@@ -31,7 +31,7 @@ namespace Testing
         public IEnumerable<string> Words { get; set; }
     }
 
-    public class SampleJobRunner : BackgroundJob<Job, int, OcrRequest, OcrResult>
+    public class SampleJobRunner : BackgroundJobBase<Job, int, OcrRequest, OcrResult>
     {
         public SampleJobRunner(ILogger logger) : base(new JobRepository(), logger)
         {
