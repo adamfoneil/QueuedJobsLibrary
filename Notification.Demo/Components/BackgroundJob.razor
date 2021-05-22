@@ -8,15 +8,13 @@
         <div class="mr-3">
             @if (JobInfo.IsRunning)
             {            
-                <span>
-                    <img src="/img/loading.gif"/>
-                </span>            
+                <span><img src="/img/loading.gif"/></span>            
             }
-            else if (JobInfo.Status == QueuedJobs.Models.Status.Succeeded)
+            else if (JobInfo.Status == Status.Succeeded)
             {
                 <span class="oi oi-check" style="color:green"></span>
             }
-            else if (JobInfo.Status == QueuedJobs.Models.Status.Failed)
+            else if (JobInfo.Status == Status.Failed)
             {
                 <span class="oi oi-warning" style="color:red"></span>
             }
