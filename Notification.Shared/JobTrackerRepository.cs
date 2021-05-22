@@ -27,16 +27,6 @@ namespace Notification.Shared
             }
         }
 
-        public async Task ClearNotificationAsync(int id)
-        {
-            using (var cn = new SqlConnection(_connectionString))
-            {
-                var job = await cn.GetAsync<JobTracker>(id);
-                job.IsCleared = true;
-                await cn.UpdateAsync(job, m => m.IsCleared);
-            }
-        }
-
         public override async Task<JobTracker> GetAsync(int key)
         {
             using (var cn = new SqlConnection(_connectionString))

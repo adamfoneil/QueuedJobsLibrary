@@ -28,7 +28,7 @@
 
     async Task RefreshList()
     {
-        MyJobs = await Jobs.ActiveJobsByUser(userName);
+        MyJobs = await Jobs.ActiveJobsByUserAsync(userName);
     }
 
     async Task RunTask()

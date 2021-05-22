@@ -69,7 +69,7 @@
 
     async Task ClearNotification()
     {
-        await Jobs.ClearNotificationAsync(JobInfo.Id);
+        await Jobs.ClearJobAsync(JobInfo.Id);
         await Cleared.InvokeAsync();
     }
 

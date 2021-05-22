@@ -68,6 +68,11 @@ namespace Testing
     {
         public const string DbName = "QueuedJobs";
 
+        public override Task<IEnumerable<Job>> ActiveJobsByUserAsync(string userName)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task CreateTableIfNotExistsAsync()
         {
             using (var cn = LocalDb.GetConnection(DbName))
