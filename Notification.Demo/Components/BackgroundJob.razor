@@ -5,10 +5,12 @@
 {
     <h3>Background Job: @JobInfo.RequestType, Id = @JobInfo.Id</h3>    
     <div class="d-flex align-items-center">
-        <div class="mr-2">
+        <div class="mr-3">
             @if (JobInfo.IsRunning)
             {            
-                <span><img src="/img/loading.gif"/>Running</span>            
+                <span>
+                    <img src="/img/loading.gif"/>
+                </span>            
             }
             else if (JobInfo.Status == QueuedJobs.Models.Status.Succeeded)
             {
@@ -20,20 +22,20 @@
             }
         </div>
 
-        <div class="mr-2">
+        <div class="mr-3">
             <span>Status: @JobInfo.Status.ToString()</span>            
         </div>
 
         @if (JobInfo.Started.HasValue)
         {
-            <div class="mr-2">
+            <div class="mr-3">
                 <span>Started: @JobInfo.Started</span>
             </div>
         }
                
         @if (JobInfo.Completed.HasValue)
         {
-            <div class="mr-2">
+            <div class="mr-3">
                 <span>Completed: @JobInfo.Completed</span>
                 <span class="ml-2">Duration: @JobInfo.Duration sec</span>
             </div>
@@ -45,7 +47,10 @@
     </div>
     
     <div>
-        @ChildContent
+        @if (JobInfo.IsJobType<ZipRequest, ZipResult>(out ZipRequest request, out ZipResult result))
+        {
+            <ZipJob Request="request" Result="result"/>
+        }
     </div>    
 }
 
@@ -60,9 +65,6 @@
 
     [Parameter]
     public JobTracker JobInfo { get; set; }
-
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
 
     [Parameter]
     public EventCallback Cleared { get; set; }

@@ -1,6 +1,4 @@
-﻿using Notification.Shared.Requests;
-using Notification.Shared.Responses;
-using QueuedJobs.Models;
+﻿using QueuedJobs.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json;
 
@@ -11,24 +9,24 @@ namespace Notification.Shared.Models
     {
         public const string ZipBuilderQueue = "zip-builder";
         
-        public bool IsZipRequest(out ZipRequest request, out ZipResult result)
+        public bool IsJobType<TRequest, TResult>(out TRequest request, out TResult result)
         {
             if (!IsCompleted)
             {
-                request = null;
-                result = null;
+                request = default;
+                result = default;
                 return false;
             }
 
-            if (RequestType.Equals(nameof(ZipRequest)))
+            if (RequestType.Equals(typeof(TRequest).Name))
             {
-                request = JsonSerializer.Deserialize<ZipRequest>(RequestData);
-                result = JsonSerializer.Deserialize<ZipResult>(ResultData);
+                request = JsonSerializer.Deserialize<TRequest>(RequestData);
+                result = JsonSerializer.Deserialize<TResult>(ResultData);
                 return true;
             }
 
-            request = null;
-            result = null;
+            request = default;
+            result = default;
             return false;
         }
     }
