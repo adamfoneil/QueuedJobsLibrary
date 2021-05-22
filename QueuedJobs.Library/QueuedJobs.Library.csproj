@@ -12,6 +12,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/adamfoneil/QueuedJobsLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/adamfoneil/QueuedJobsLibrary</RepositoryUrl>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
