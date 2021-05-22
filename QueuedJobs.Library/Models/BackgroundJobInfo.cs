@@ -1,6 +1,7 @@
 ﻿using AO.Models.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace QueuedJobs.Models
 {
@@ -40,5 +41,30 @@ namespace QueuedJobs.Models
 
         public bool IsRunning => Status == Status.Running;
         public bool IsCompleted => Status == Status.Succeeded || Status == Status.Failed;
+
+        /// <summary>
+        /// use this for dispatching type-specific content related to jobs.
+        /// If true, then you can invoke type-specific components for that request + result type
+        /// </summary>
+        public bool IsJobType<TRequest, TResult>(out TRequest request, out TResult result)
+        {
+            if (!IsCompleted)
+            {
+                request = default;
+                result = default;
+                return false;
+            }
+
+            if (RequestType.Equals(typeof(TRequest).Name))
+            {
+                request = JsonSerializer.Deserialize<TRequest>(RequestData);
+                result = JsonSerializer.Deserialize<TResult>(ResultData);
+                return true;
+            }
+
+            request = default;
+            result = default;
+            return false;
+        }
     }
 }

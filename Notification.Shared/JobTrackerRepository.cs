@@ -17,7 +17,7 @@ namespace Notification.Shared
             _connectionString = connectionString;
         }              
 
-        public async Task<IEnumerable<JobTracker>> ActiveJobsByUser(string userName)
+        public override async Task<IEnumerable<JobTracker>> ActiveJobsByUserAsync(string userName)
         {
             using (var cn = new SqlConnection(_connectionString))
             {

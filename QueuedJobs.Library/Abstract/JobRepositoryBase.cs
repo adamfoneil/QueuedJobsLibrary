@@ -1,5 +1,6 @@
 ﻿using AO.Models.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace QueuedJobs.Library.Abstract
@@ -15,6 +16,8 @@ namespace QueuedJobs.Library.Abstract
         /// persist job model in store
         /// </summary>
         public abstract Task<TModel> SaveAsync(TModel model);
+
+        public abstract Task<IEnumerable<TModel>> ActiveJobsByUserAsync(string userName);
 
         /// <summary>
         /// fetch the job model and call UpdatedEvent for that job
