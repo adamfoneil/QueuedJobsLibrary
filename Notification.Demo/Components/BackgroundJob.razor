@@ -58,7 +58,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Jobs.UpdatedEvent += JobUpdated;
+        Jobs.Updated += JobUpdated;
     }
 
     [Parameter]
@@ -82,5 +82,5 @@
         }
     }
 
-    public void Dispose() => Jobs.UpdatedEvent -= JobUpdated;
+    public void Dispose() => Jobs.Updated -= JobUpdated;
 }

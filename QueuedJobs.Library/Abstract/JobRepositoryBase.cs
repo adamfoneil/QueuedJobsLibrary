@@ -22,12 +22,12 @@ namespace QueuedJobs.Library.Abstract
         public async Task OnUpdatedAsync(TKey key)
         {
             var model = await GetAsync(key);
-            UpdatedEvent?.Invoke(model);
+            Updated?.Invoke(model);
         }
 
         /// <summary>
         /// invoked within OnUpdatedAsync
         /// </summary>
-        public event Action<TModel> UpdatedEvent;
+        public event Action<TModel> Updated;
     }
 }

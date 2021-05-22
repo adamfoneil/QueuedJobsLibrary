@@ -3,7 +3,6 @@ using Dapper.CX.SqlServer.Extensions.Int;
 using Microsoft.Data.SqlClient;
 using Notification.Shared.Models;
 using QueuedJobs.Library.Abstract;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
