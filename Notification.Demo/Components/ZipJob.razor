@@ -1,0 +1,17 @@
+﻿<div class="d-flex align-items-center">
+    <div class="p-2">
+        <span>Requested: </span>
+        <span class="ml-2">@Request.ContainerName</span>
+        <span class="ml-2">@Request.BlobPrefix</span>
+    </div>
+
+    <div class="p-2">
+        <a href="@Result.Url" class="btn btn-primary">Download</a>
+    </div>
+</div>
+
+@code {
+    [Parameter] public ZipRequest Request { get; set; }
+    [Parameter] public ZipResult Result { get; set; }
+
+}

@@ -3,7 +3,6 @@
 @inject QueueManager QueueManager
 @inject ILogger<Index> Logger
 
-
 <h1>Notification Demo</h1>
 
 <button class="btn btn-primary" @onclick="RunTask">Queue a Task</button>
@@ -13,10 +12,13 @@
     foreach (var job in MyJobs)
     {
         <BackgroundJob JobInfo="job" Cleared="OnCleared">
+            @if (job.IsZipRequest(out ZipRequest request, out ZipResult result))
+            {
+                <ZipJob Request="request" Result="result"/>
+            }
         </BackgroundJob>
     }
 }
-
 
 @code { 
     const string userName = "demo-user";
@@ -49,5 +51,4 @@
     {
         await RefreshList();
     }
-
 }

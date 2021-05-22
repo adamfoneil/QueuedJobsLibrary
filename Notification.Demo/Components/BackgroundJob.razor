@@ -5,34 +5,42 @@
 {
     <h3>Background Job: @JobInfo.RequestType, Id = @JobInfo.Id</h3>    
     <div class="d-flex align-items-center">
-        @if (JobInfo.IsRunning)
-        {
-            <div>
-                <span><img src="/img/loading.gif"/>Running</span>
-            </div>                        
-        }
+        <div class="mr-2">
+            @if (JobInfo.IsRunning)
+            {            
+                <span><img src="/img/loading.gif"/>Running</span>            
+            }
+            else if (JobInfo.Status == QueuedJobs.Models.Status.Succeeded)
+            {
+                <span class="oi oi-check" style="color:green"></span>
+            }
+            else if (JobInfo.Status == QueuedJobs.Models.Status.Failed)
+            {
+                <span class="oi oi-warning" style="color:red"></span>
+            }
+        </div>
 
-        <div>
+        <div class="mr-2">
             <span>Status: @JobInfo.Status.ToString()</span>            
         </div>
 
         @if (JobInfo.Started.HasValue)
         {
-            <div>
+            <div class="mr-2">
                 <span>Started: @JobInfo.Started</span>
             </div>
         }
                
         @if (JobInfo.Completed.HasValue)
         {
-            <div>
+            <div class="mr-2">
                 <span>Completed: @JobInfo.Completed</span>
                 <span class="ml-2">Duration: @JobInfo.Duration sec</span>
             </div>
         }
 
         <div>
-            <button class="btn btn-sm btn-light ml-2" @onclick="ClearNotification">clear</button>
+            <button class="btn btn-sm btn-light" @onclick="ClearNotification">clear</button>
         </div>
     </div>
     
@@ -70,7 +78,7 @@
         if (job.Id == JobInfo.Id)
         {
             JobInfo = job;
-            InvokeAsync(StateHasChanged);
+            InvokeAsync(StateHasChanged);            
         }
     }
 

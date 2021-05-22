@@ -39,5 +39,6 @@ namespace QueuedJobs.Models
         public int RetryCount { get; set; }
 
         public bool IsRunning => Status == Status.Running;
+        public bool IsCompleted => Status == Status.Succeeded || Status == Status.Failed;
     }
 }
