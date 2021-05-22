@@ -57,7 +57,7 @@ namespace Notification.Demo
                 {
                     var repo = context.RequestServices.GetRequiredService<JobTrackerRepository>();
                     var id = int.Parse(context.Request.RouteValues["id"].ToString());
-                    await repo.OnJobUpdatedAsync(id);
+                    await repo.OnUpdatedAsync(id);
                 });
             });
         }

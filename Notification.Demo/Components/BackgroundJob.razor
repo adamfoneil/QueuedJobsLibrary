@@ -47,7 +47,7 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Jobs.OnJobUpdated += JobUpdated;
+        Jobs.UpdatedEvent += JobUpdated;
     }
 
     [Parameter]
@@ -70,9 +70,9 @@
         if (job.Id == JobInfo.Id)
         {
             JobInfo = job;
-            InvokeAsync(StateHasChanged);            
+            InvokeAsync(StateHasChanged);
         }
     }
 
-    public void Dispose() => Jobs.OnJobUpdated -= JobUpdated;
+    public void Dispose() => Jobs.UpdatedEvent -= JobUpdated;
 }

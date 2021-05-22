@@ -1,7 +1,7 @@
 ﻿using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Logging;
-using QueuedJobs.Library.Interfaces;
+using QueuedJobs.Library.Abstract;
 using QueuedJobs.Models;
 using System;
 using System.Text;
@@ -25,7 +25,7 @@ namespace QueuedJobs.Extensions
         /// </summary>
         public static async Task<TKey> QueueJobAsync<TJob, TRequest, TKey>(this QueueClient queueClient,
             string userName, TRequest request,
-            IRepository<TJob, TKey> repository,
+            JobRepositoryBase<TJob, TKey> repository,
             ILogger logger) where TJob : BackgroundJobInfo<TKey>, new()
         {
             // this enables visibility of the job over its lifetime (enabling dashboards, notifications, retry and tracking features)
@@ -50,7 +50,7 @@ namespace QueuedJobs.Extensions
         }
 
         public static async Task<TJob> SaveJobAsync<TJob, TRequest, TKey>(
-            this IRepository<TJob, TKey> repository, string userName, TRequest request)
+            this JobRepositoryBase<TJob, TKey> repository, string userName, TRequest request)
             where TJob : BackgroundJobInfo<TKey>, new()
         {
             var job = new TJob();

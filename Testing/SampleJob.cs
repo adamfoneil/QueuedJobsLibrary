@@ -3,7 +3,7 @@ using Dapper.CX.SqlServer.Extensions.Int;
 using Microsoft.Extensions.Logging;
 using ModelSync.Models;
 using QueuedJobs.Abstract;
-using QueuedJobs.Library.Interfaces;
+using QueuedJobs.Library.Abstract;
 using QueuedJobs.Models;
 using SqlServer.LocalDb;
 using System;
@@ -64,26 +64,9 @@ namespace Testing
     {
     }
 
-    public class JobRepository : IRepository<Job, int>
+    public class JobRepository : JobRepositoryBase<Job, int>
     {
         public const string DbName = "QueuedJobs";
-
-        public async Task<Job> GetAsync(int key)
-        {
-            using (var cn = LocalDb.GetConnection(DbName))
-            {
-                return await cn.GetAsync<Job>(key);
-            }
-        }
-
-        public async Task<Job> SaveAsync(Job model)
-        {
-            using (var cn = LocalDb.GetConnection(DbName))
-            {
-                await cn.SaveAsync(model);
-                return model;
-            }
-        }
 
         public async Task CreateTableIfNotExistsAsync()
         {
@@ -97,6 +80,24 @@ namespace Testing
                         typeof(Job)
                     }, cn);
                 }
+            }
+        } 
+
+        public override async Task<Job> GetAsync(int key)
+        {
+            using (var cn = LocalDb.GetConnection(DbName))
+            {
+                return await cn.GetAsync<Job>(key);
+            }
+
+        }
+
+        public override async Task<Job> SaveAsync(Job model)
+        {
+            using (var cn = LocalDb.GetConnection(DbName))
+            {
+                await cn.SaveAsync(model);
+                return model;
             }
         }
     }

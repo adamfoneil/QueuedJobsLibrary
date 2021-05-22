@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using QueuedJobs.Extensions;
-using QueuedJobs.Library.Interfaces;
+using QueuedJobs.Library.Abstract;
 using QueuedJobs.Models;
 using System;
 using System.Net.Http;
@@ -13,13 +13,13 @@ namespace QueuedJobs.Abstract
     {
         private static HttpClient _client = new HttpClient();
 
-        private readonly IRepository<TJob, TKey> _repository;
+        private readonly JobRepositoryBase<TJob, TKey> _repository;
 
         protected readonly ILogger Logger;
 
         public bool PostStatusUpdates { get; set; } = true;
 
-        public BackgroundJobBase(IRepository<TJob, TKey> repository, ILogger logger)
+        public BackgroundJobBase(JobRepositoryBase<TJob, TKey> repository, ILogger logger)
         {
             _repository = repository;
             Logger = logger;
