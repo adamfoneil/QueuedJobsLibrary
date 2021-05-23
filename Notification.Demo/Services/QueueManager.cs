@@ -10,8 +10,8 @@ namespace Notification.Demo.Services
     public class QueueManager : QueueClientHelperBase
     {
         public QueueManager(string connectionString) : base(connectionString)
-        {                
-        }     
+        {
+        }
 
         public QueueClient ZipBuilder => this[JobTracker.ZipBuilderQueue];
     }

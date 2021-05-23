@@ -9,7 +9,6 @@ namespace Notification.Shared.Models
     {
         public const string ZipBuilderQueue = "zip-builder";
 
-        protected override T DeserializeJson<T>(string json) => JsonSerializer.Deserialize<T>(json);
-        
+        protected override T DeserializeJson<T>(string json) => JsonSerializer.Deserialize<T>(json);        
     }
 }
