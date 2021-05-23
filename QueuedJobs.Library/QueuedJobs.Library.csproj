@@ -6,13 +6,13 @@
     <PackageId>AO.BackgroundJobs</PackageId>
     <Authors>Adam O'Neil</Authors>
     <Product>AO.BackgroundJobs</Product>
-    <Description>Abstract base class for managing long-running background jobs, such as from Azure Functions</Description>
+    <Description>Utilities for working with queue trigger Azure Functions, providing job success/fail tracking and end-user notifications</Description>
     <Copyright>Copyright (c) 2021 Adam O'Neil</Copyright>
     <RootNamespace>QueuedJobs</RootNamespace>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/adamfoneil/QueuedJobsLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/adamfoneil/QueuedJobsLibrary</RepositoryUrl>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
