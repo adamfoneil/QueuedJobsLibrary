@@ -1,5 +1,4 @@
-﻿using AO.Models.Interfaces;
-using QueuedJobs.Models;
+﻿using AO.Models.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

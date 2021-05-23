@@ -10,11 +10,11 @@
             {            
                 <span><img src="/img/loading.gif"/></span>            
             }
-            else if (JobInfo.Status == Status.Succeeded)
+            else if (JobInfo.Status == JobStatus.Succeeded)
             {
                 <span class="oi oi-check" style="color:green"></span>
             }
-            else if (JobInfo.Status == Status.Failed)
+            else if (JobInfo.Status == JobStatus.Failed)
             {
                 <span class="oi oi-warning" style="color:red"></span>
             }

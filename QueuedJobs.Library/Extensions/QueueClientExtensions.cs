@@ -1,8 +1,8 @@
-﻿using Azure.Storage.Queues;
+﻿using AO.Models.Models;
+using Azure.Storage.Queues;
 using Azure.Storage.Queues.Models;
 using Microsoft.Extensions.Logging;
 using QueuedJobs.Library.Abstract;
-using QueuedJobs.Models;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -42,7 +42,7 @@ namespace QueuedJobs.Extensions
             {
                 // if queuing failed, then we need to indicate that in the stored record
                 logger.LogError($"Error queuing Job Id {job.Id} on {queueClient.Name}: {exc.Message}");
-                job.Status = Status.Aborted;
+                job.Status = JobStatus.Aborted;
                 await repository.SaveAsync(job);
             }
 
@@ -57,7 +57,7 @@ namespace QueuedJobs.Extensions
             job.UserName = userName;
             job.RequestType = typeof(TRequest).Name;
             job.RequestData = JsonSerializer.Serialize(request);
-            job.Status = Status.Pending;
+            job.Status = JobStatus.Pending;
             job.Started = null;
             job.Completed = null;
             job.Created = DateTime.UtcNow;

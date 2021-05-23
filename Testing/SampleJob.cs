@@ -1,10 +1,10 @@
-﻿using Dapper.CX.Extensions;
+﻿using AO.Models.Models;
+using Dapper.CX.Extensions;
 using Dapper.CX.SqlServer.Extensions.Int;
 using Microsoft.Extensions.Logging;
 using ModelSync.Models;
 using QueuedJobs.Abstract;
 using QueuedJobs.Library.Abstract;
-using QueuedJobs.Models;
 using SqlServer.LocalDb;
 using System;
 using System.Collections.Generic;
@@ -52,7 +52,7 @@ namespace Testing
             });
         }
 
-        protected override async Task OnStatusUpdatedAsync(int id, Status status)
+        protected override async Task OnStatusUpdatedAsync(int id, JobStatus status)
         {
             // do nothing
             await Task.CompletedTask;
@@ -62,6 +62,10 @@ namespace Testing
     [Table("Job", Schema = "queue")]
     public class Job : BackgroundJobInfo<int>
     {
+        protected override T DeserializeJson<T>(string json)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class JobRepository : JobRepositoryBase<Job, int>

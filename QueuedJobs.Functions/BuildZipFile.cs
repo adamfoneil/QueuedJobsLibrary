@@ -1,3 +1,4 @@
+using AO.Models.Models;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
@@ -9,7 +10,6 @@ using Notification.Shared.Requests;
 using Notification.Shared.Responses;
 using QueuedJobs.Abstract;
 using QueuedJobs.Functions.Extensions;
-using QueuedJobs.Models;
 using StringIdLibrary;
 using System;
 using System.IO;
@@ -108,7 +108,7 @@ namespace QueuedJobs.Functions
                 }
             }            
 
-            protected override async Task OnStatusUpdatedAsync(int id, Status status) => 
+            protected override async Task OnStatusUpdatedAsync(int id, JobStatus status) => 
                 await PostStatusUpdateAsync(id, _endpointBuilder.Invoke(id));            
         }
     }

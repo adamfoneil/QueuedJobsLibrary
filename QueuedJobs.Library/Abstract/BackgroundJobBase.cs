@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AO.Models.Models;
+using Microsoft.Extensions.Logging;
 using QueuedJobs.Extensions;
 using QueuedJobs.Library.Abstract;
-using QueuedJobs.Models;
 using System;
 using System.Net.Http;
 using System.Text.Json;
@@ -33,7 +33,7 @@ namespace QueuedJobs.Abstract
         /// <summary>
         /// this gets called when job status changes
         /// </summary>
-        protected abstract Task OnStatusUpdatedAsync(TKey id, Status status);
+        protected abstract Task OnStatusUpdatedAsync(TKey id, JobStatus status);
 
         /// <summary>
         /// call this in your QueueTrigger Azure Function. The id will be the queue message data
@@ -58,20 +58,20 @@ namespace QueuedJobs.Abstract
                     errorContext = "executing";
                     job.RetryCount++;
                     job.ExceptionData = null;
-                    job.Status = Status.Running;
+                    job.Status = JobStatus.Running;
                     job.Started = DateTime.UtcNow;
                     await _repository.SaveAsync(job);
                     if (PostStatusUpdates) await OnStatusUpdatedAsync(id, job.Status);
 
                     result = await OnExecuteAsync(request);
                     job.ResultData = JsonSerializer.Serialize(result);
-                    job.Status = Status.Succeeded;
+                    job.Status = JobStatus.Succeeded;
                 }
                 catch (Exception exc)
                 {
                     errorContext = "failing";
                     Logger.LogError(exc, $"Job Id {job.Id} failed: {exc.Message}");
-                    job.Status = Status.Failed;
+                    job.Status = JobStatus.Failed;
                     job.ExceptionData = JsonSerializer.Serialize(new
                     {
                         message = exc.FullMessage(),
@@ -92,7 +92,7 @@ namespace QueuedJobs.Abstract
             {
                 if (job != null)
                 {
-                    job.Status = Status.Aborted;
+                    job.Status = JobStatus.Aborted;
                     job.ExceptionData = JsonSerializer.Serialize(new
                     {
                         errorContext,
