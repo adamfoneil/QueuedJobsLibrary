@@ -5,9 +5,12 @@
         <span class="ml-2">@Request.BlobPrefix</span>
     </div>
 
-    <div class="p-2">
-        <a href="@Result.Url" class="btn btn-primary">Download</a>
-    </div>
+    @if (Result is not null)
+    {
+        <div class="p-2">
+            <a href="@Result.Url" class="btn btn-primary">Download</a>
+        </div>
+    }
 </div>
 
 @code {
