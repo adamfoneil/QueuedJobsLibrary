@@ -1,4 +1,4 @@
-[![Nuget](https://img.shields.io/nuget/v/AO.BackgroundJobs)](https://www.nuget.org/packages/AO.BackgroundJobs/)
+[![Nuget](https://img.shields.io/nuget/v/AO.Azure.Queues)](https://www.nuget.org/packages/AO.Azure.Queues /)
 
 This is a framework for working with `QueueTrigger` Azure Functions to provide highly scaleable background processing along with a comprehensive end-user notification feature, intended for Blazor.
 
