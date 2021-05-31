@@ -1,3 +1,4 @@
+using Dapper.CX.SqlServer.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Notification.Demo.Services;
 using Notification.Shared;
+using System;
 
 namespace Notification.Demo
 {
@@ -29,6 +31,8 @@ namespace Notification.Demo
 
             var storageConnection = Configuration.GetConnectionString("Storage");
             services.AddScoped(sp => new QueueManager(storageConnection));
+
+            services.AddDapperCX(connectionString, (id) => Convert.ToInt32(id));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -28,14 +28,12 @@ namespace QueuedJobs.Functions
             int id = int.Parse(data); // int because JobTracker is QueuedJob<int>
             var config = context.GetConfig();
 
-            var databaseConnection = config["ConnectionStrings:Database"];
-            log.LogDebug($"Database connection = {databaseConnection}");
+            var databaseConnection = config["ConnectionStrings:Database"];            
+            var storageConnection = config["ConnectionStrings:Storage"];
+            var statusUpdateUrl = config["StatusUpdateUrl"];
+
             var repo = new JobTrackerRepository(databaseConnection);
 
-            var storageConnection = config["ConnectionStrings:Storage"];
-            log.LogDebug($"Storage connection = {storageConnection}");
-
-            var statusUpdateUrl = config["StatusUpdateUrl"];
             new ZipFileBuilder(storageConnection, (id) => $"{statusUpdateUrl}/{id}", repo, log)
                 .ExecuteAsync(id)
                 .Wait();

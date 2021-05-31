@@ -1,0 +1,29 @@
+﻿@page "/Dashboard"
+@inject DapperCX<int> Data
+
+<h3>Dashboard</h3>
+<p>Use this to monitor job throughput, request data and results, success/fail info</p>
+
+@if (query != null)
+{
+<EditForm Model="query">
+
+</EditForm>
+}
+
+@code {
+    JobDashboard query = new JobDashboard();
+    IEnumerable<JobTracker> data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await RefreshList();
+    }
+
+    public async Task RefreshList()
+    {
+        data = await Data.QueryAsync(query);
+    }
+}
