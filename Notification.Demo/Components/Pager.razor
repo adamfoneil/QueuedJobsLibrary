@@ -1,0 +1,38 @@
+﻿<div class="d-flex align-items-center ml-2">
+    @if (Value > 0)
+    {
+        <button class="btn btn-outline-secondary" type="button" @onclick="@((args) => Navigate(-1))">
+            <span class="oi oi-caret-left"></span>
+        </button>
+    }
+    
+    <span class="mx-3">@(Value + 1)</span>
+
+    <button class="btn btn-outline-secondary" type="button" @onclick="@((args) => Navigate(1))">
+        <span class="oi oi-caret-right"></span>
+    </button>
+</div>
+
+@code {
+    [Parameter]
+    public int? Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int?> ValueChanged { get; set; }
+
+    public void Reset()
+    {
+        Value = 0;
+        StateHasChanged();
+        ValueChanged.InvokeAsync(Value);
+    }
+
+    void Navigate(int direction)
+    {
+        if (!Value.HasValue) Value = 0;
+        Value += direction;
+        StateHasChanged();
+        ValueChanged.InvokeAsync(Value);
+    }
+}
+

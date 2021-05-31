@@ -12,6 +12,9 @@ namespace Testing
         [TestMethod]
         public void JobDashboard() => QueryHelper.Test<JobDashboard>(GetConnection);
 
+        /// <summary>
+        /// note I'm actually using Sendhook Azure for the real demo
+        /// </summary>
         private SqlConnection GetConnection() => LocalDb.GetConnection("NotifyDemo");
     }
 }

@@ -7,17 +7,81 @@
 @if (query != null)
 {
 <EditForm Model="query">
+    <div class="d-flex align-items-center">
+        <div>
+            <label>User Name:</label>
+            <RadzenTextBox @bind-Value="query.UserName"/>
+        </div>
 
+        <div class="ml-2 d-flex align-items-center">
+            <label>Status:</label>
+            <RadzenDropDown @bind-Value="query.StatusId" AllowClear="true" Data="statuses" ValueProperty="Key" TextProperty="Value"/>
+        </div>
+
+        <div class="ml-2">
+            <label>From Date:</label>
+            <RadzenDatePicker @bind-Value="query.FromDate" DateFormat="M/d/yy" AllowClear="true"/>
+        </div>
+
+        <div class="ml-2">
+            <label>Through Date:</label>
+            <RadzenDatePicker @bind-Value="query.ThroughDate" DateFormat="M/d/yy" AllowClear="true"/>
+        </div>
+
+        <div class="ml-2">
+            <div class="d-flex align-items-center">
+                <button class="btn btn-secondary mr-2" @onclick="@(async () => { pager.Reset(); })">Refresh</button>
+                <Pager ValueChanged="@(async (page) => { query.Page = page; await RefreshList(); })" @ref="pager"/>
+            </div>                        
+        </div>
+    </div>
 </EditForm>
 }
 
+<hr/>
+
+<RadzenGrid Data="data" TItem="JobTracker">
+    <Columns>
+        <RadzenGridColumn TItem="JobTracker" Title="Id" Property="Id"/>
+        <RadzenGridColumn TItem="JobTracker" Title="Status">
+            <Template Context="job">
+                <span class="mr-2">
+                @if (job.IsRunning)
+                {            
+                    <span><img src="/img/loading.gif"/></span>            
+                }
+                else if (job.Status == JobStatus.Succeeded)
+                {
+                    <span class="oi oi-check" style="color:green"></span>
+                }
+                else if (job.Status == JobStatus.Failed)
+                {
+                    <span class="oi oi-warning" style="color:red"></span>
+                }
+                </span>
+                <span>@job.Status.ToString()</span>
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="JobTracker" Title="User Name" Property="UserName"/>
+        <RadzenGridColumn TItem="JobTracker" Title="Created" Property="Created"/>
+        <RadzenGridColumn TItem="JobTracker" Title="Type" Property="RequestType"/>
+        <RadzenGridColumn TItem="JobTracker" Title="Duration" Property="Duration"/>
+        <RadzenGridColumn TItem="JobTracker" Title="Request Data" Property="RequestData"/>
+        <RadzenGridColumn TItem="JobTracker" Title="Result Data" Property="ResultData"/>
+    </Columns>
+</RadzenGrid>
+
 @code {
-    JobDashboard query = new JobDashboard();
+    Pager pager;
+    JobDashboard query = new JobDashboard() { Page = 0 };
     IEnumerable<JobTracker> data;
+    Dictionary<int, string> statuses;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        statuses = EnumHelper.ToDictionary<JobStatus>();
 
         await RefreshList();
     }

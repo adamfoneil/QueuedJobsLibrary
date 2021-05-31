@@ -1,4 +1,5 @@
-﻿using Dapper.QX.Abstract;
+﻿using AO.Models.Models;
+using Dapper.QX.Abstract;
 using Dapper.QX.Attributes;
 using Dapper.QX.Interfaces;
 using Notification.Shared.Models;
@@ -28,6 +29,15 @@ namespace Notification.Demo.Queries
         [Where("CONVERT(date, [Created])<=@throughDate")]
         public DateTime? ThroughDate { get; set; }
 
+        [Where("[Status]=@status")]
+        public JobStatus? Status { get; set; }
+
+        /// <summary>
+        /// this is for Blazor binding
+        /// </summary>
+        [Where("[Status]=@statusId")]
+        public int? StatusId { get; set; }
+
         protected override IEnumerable<ITestableQuery> GetTestCasesInner()
         {
             yield return new JobDashboard() { Page = 1 };
@@ -35,6 +45,8 @@ namespace Notification.Demo.Queries
             yield return new JobDashboard() { RequestType = "whatever" };
             yield return new JobDashboard() { FromDate = DateTime.Now };
             yield return new JobDashboard() { ThroughDate = DateTime.Now };
+            yield return new JobDashboard() { Status = JobStatus.Succeeded };
+            yield return new JobDashboard() { StatusId = 1 };
         }
     }
 }
